@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<!--
+
+Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRosser)
+
+-->
+<html lang="en">
+	<head>
+    	<meta charset="utf-8">
+        <title>Checklist</title>
+        <link href="main.css" rel="stylesheet" type="text/css">
+		<link rel="icon" type="image/png" href="icon.png">
+		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/TableDnD/0.9.1/jquery.tablednd.js" integrity="sha256-d3rtug+Hg1GZPB7Y/yTcRixO/wlI78+2m08tosoRn7A=" crossorigin="anonymous"></script>
+    </head>
+	<body>
+        <script type="text/javascript">/* src="main.js" */
+			$(document).ready(function() {
+				// Initialise the table
+				
+				function dragElement(elmnt) {
+					let pos1 = 0,
+						pos2 = 0,
+						pos3 = 0,
+						pos4 = 0;
+					if (header = document.getElementById(elmnt.id + "-header-drag-handler-img")) {
+						/* if present, the header is where you move the DIV from:*/
+						header.onmousedown = dragMouseDown;
+					} else {
+						/* otherwise, move the DIV from anywhere inside the DIV:*/
+						elmnt.onmousedown = dragMouseDown;
+					}
+
+					function dragMouseDown(e) {
+						e = e || window.event;
+						e.preventDefault();
+						// get the mouse cursor position at startup:
+						pos3 = e.clientX;
+						pos4 = e.clientY;
+						document.onmouseup = function(){
+							/* stop moving when mouse button is released:*/
+							document.onmouseup = null;
+							document.onmousemove = null;
+						};
+						// call a function whenever the cursor moves:
+						document.onmousemove = function(e){
+							e = e || window.event;
+							e.preventDefault();
+							// calculate the new cursor position:
+							pos1 = pos3 - e.clientX;
+							pos2 = pos4 - e.clientY;
+							pos3 = e.clientX;
+							pos4 = e.clientY;
+							// set the element's new position:
+							elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+							elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+						};
+					}
+				}
+
+				dragElement(document.getElementById("list-1"));
+				$("#list-1-table").tableDnD({
+					onDrop: function(){
+						$("#list-1-table tbody tr").removeClass("even-row");
+						$("#list-1-table tbody tr:even").addClass("even-row");
+					},
+					dragHandle: ".row-drag-handler"
+				});
+				$("#list-1-table tbody tr:even").addClass("even-row");
+			});
+		</script>
+		<div class="container">
+			<div class="header">
+				<div class="social">
+					<a href="https://github.com/DiriectorDoc/Checklist-Maker"><svg viewBox="0 0 16 16" id="github"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg></a>
+				</div>
+				<h1 id="ListName">
+					Checklist
+				</h1>
+			</div>
+			<div class="rename-later">
+				<div class="list" id="list-1">
+					<div class="list-header">
+						<table>
+							<tr>
+								<td class="title">
+									List 1
+								</td>
+								<td class="header-drag-handler">
+									<div class="header-drag-handler-img grab" id="list-1-header-drag-handler-img">
+										<svg viewBox="0 0 90 25"><g fill="none" stroke="#888" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"><path d="M2.5 2.5h85M2.5 12.5h85M2.5 22.5h85"/></g></svg>
+									</div>
+								</td>
+								<td class="X" id="list-1-X">
+									<svg viewBox="0 0 16 16"><g stroke-linecap="round" stroke-linejoin="round"><path fill="#cd0000" stroke="#900" d="M.5.5h15v15H.5z"/><path fill="none" stroke="gray" stroke-width="2" d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></g></svg>
+								</td>
+							</tr>
+						</table>
+						<!--div class="title">
+							Very very long title for list 1
+						</div>
+						<div class="header-drag-handler">
+							<div class="header-drag-handler-img grab" id="list-1-header-drag-handler-img">
+								<svg viewBox="0 0 90 25"><g fill="none" stroke="#888" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"><path d="M2.5 2.5h85M2.5 12.5h85M2.5 22.5h85"/></g></svg>
+							</div>
+						</div-->
+					</div>
+					<table id="list-1-table" class="list-content">
+						<tbody>
+							<tr id="list-1-row-1">
+								<td class="row-drag-handler">
+									<div class="row-drag-handler-img grab">
+										<svg viewBox="0 0 35 35"><path fill="none" stroke="#888" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M7.5 7.5h20m-20 10h20m-20 10h20"/></svg>
+									</div>
+								</td>
+								<td>
+									<input type="text" placeholder="Task 1" />
+								</td>
+								<td>
+									Sample1
+								</td>
+								<td>
+									Sample2
+								</td>
+							</tr>
+							<tr id="list-1-row-2">
+								<td class="row-drag-handler">
+									<div class="row-drag-handler-img grab">
+										<svg viewBox="0 0 35 35"><path fill="none" stroke="#888" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M7.5 7.5h20m-20 10h20m-20 10h20"/></svg>
+									</div>
+								</td>
+								<td>
+									<input type="text" placeholder="Task 2" />
+								</td>
+								<td>
+									Sample3
+								</td>
+								<td>
+									Sample4
+								</td>
+							</tr>
+							<tr id="list-1-row-3">
+								<td class="row-drag-handler">
+									<div class="row-drag-handler-img grab">
+										<svg viewBox="0 0 35 35"><path fill="none" stroke="#888" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M7.5 7.5h20m-20 10h20m-20 10h20"/></svg>
+									</div>
+								</td>
+								<td>
+									<input type="text" placeholder="Task 3" />
+								</td>
+								<td>
+									Sample5
+								</td>
+								<td>
+									Sample6
+								</td>
+							</tr>
+							<tr id="list-1-row-4">
+								<td class="row-drag-handler">
+									<div class="row-drag-handler-img grab">
+										<svg viewBox="0 0 35 35"><path fill="none" stroke="#888" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M7.5 7.5h20m-20 10h20m-20 10h20"/></svg>
+									</div>
+								</td>
+								<td>
+									<input type="text" placeholder="Task 4" />
+								</td>
+								<td>
+									Sample7
+								</td>
+								<td>
+									Sample8
+								</td>
+							</tr>
+							<tr id="list-1-row-5">
+								<td class="row-drag-handler">
+									<div class="row-drag-handler-img grab">
+										<svg viewBox="0 0 35 35"><path fill="none" stroke="#888" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M7.5 7.5h20m-20 10h20m-20 10h20"/></svg>
+									</div>
+								</td>
+								<td>
+									<input type="text" placeholder="Task 5" />
+								</td>
+								<td>
+									Sample9
+								</td>
+								<td>
+									Sample0
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div id="list-1-footer" class="list-footer">
+						SampleSample
+					</div>
+				</div>
+			</div><!-- End of .rename-later -->
+		</div><!-- end of .container -->
+	</body>
+</html>

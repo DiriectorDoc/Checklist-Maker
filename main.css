@@ -1,0 +1,127 @@
+svg {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+td {
+	padding: 3pt 0;
+}
+
+tr {
+	padding: 0;
+}
+
+table {
+	border-spacing: 0;
+	-webkit-border-horizontal-spacing: 0;
+    -webkit-border-vertical-spacing: 0;
+}
+
+.list {
+	border: 2px solid;
+	resize: both;
+	overflow: auto;
+	display: inline-block;
+	width: 350px;
+	min-width: -webkit-fit-content;
+	min-width: fit-content;
+	min-height: 5em;
+	position: absolute;
+}
+
+.list table {
+	width: 100%;
+}
+
+.list-header {
+	background: #ccf;
+}
+
+.header-drag-handler{
+	padding: 2pt;
+}
+
+.header-drag-handler-img {
+	display: block;
+	margin: auto;
+	width: fit-content;
+	width: -webkit-fit-content;
+	height: 1em;
+	
+}
+
+.header-drag-handler-img svg {
+	height: inherit;
+	pointer-events: none;
+}
+
+.row-drag-handler-img {
+}
+
+.row-drag-handler-img svg {
+	height: 1em;
+	pointer-events: none;
+}
+
+.even-row {
+	background: #eee
+}
+
+.grab{
+	cursor: move;
+	cursor: grab;
+	cursor: -moz-grab;
+	cursor: -webkit-grab;
+}
+
+.grabbed {
+	cursor: grabbing;
+	cursor: -moz-grabbing;
+	cursor: -webkit-grabbing;
+}
+
+.title {
+	float: left;
+	margin-left: .33em;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.X {
+	text-align: right;
+	padding-right: .33em;	
+	max-width: -webkit-fit-content;
+}
+
+.X svg {
+	height: 1em;
+}
+
+.social {
+	float: right;
+}
+
+.social svg {
+	height:20px;
+	max-width:25px;
+	transition: all 250ms ease-out;
+}
+
+.social svg:hover {
+	transform: scale(1.5);
+}
+
+.social a {
+	margin: 5px;
+}
+
+.list-footer {
+	background: #eef;
+	width: 100%;
+	height: auto;
+}
