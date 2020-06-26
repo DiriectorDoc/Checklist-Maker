@@ -14,8 +14,93 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/TableDnD/0.9.1/jquery.tablednd.js" integrity="sha256-d3rtug+Hg1GZPB7Y/yTcRixO/wlI78+2m08tosoRn7A=" crossorigin="anonymous"></script>
     </head>
 	<body>
+		<image-src id="header-drag-handler-src">
+			<svg viewBox="0 0 90 25"><g fill="none" stroke="#888" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"><path d="M2.5 2.5h85M2.5 12.5h85M2.5 22.5h85"/></g></svg>
+		</image-src>
+		<image-src id="X-src">
+			<svg viewBox="0 0 16 16"><g stroke-linecap="round" stroke-linejoin="round"><path fill="#cd0000" stroke="#900" d="M.5.5h15v15H.5z"/><path fill="none" stroke="gray" stroke-width="2" d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></g></svg>
+		</image-src>
+		<image-src id="row-drag-handler-src">
+			<svg viewBox="0 0 35 35"><path fill="none" stroke="#888" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M7.5 7.5h20m-20 10h20m-20 10h20"/></svg>
+		</image-src>
+		<image-src id="trash-src">
+			<svg viewBox="0 0 50 50"><path fill="none" stroke="red" stroke-linecap="square" stroke-linejoin="round" stroke-width="2" d="M15 14l2 25h16l2-25"/><path fill="none" stroke="red" stroke-width="2" d="M21 18v16m4-16v16m4-16v16M12 13h26"/><path fill="none" stroke="red" stroke-linejoin="round" stroke-width="2" d="M21 12V9h8v3"/><path d="M21 8a1 1 0 00-1 1v3h2v-2h6v2h2V9a1 1 0 00-1-1h-8z" fill="red" color="#000" font-family="sans-serif" font-weight="400" overflow="visible"/><path d="M22 10v1l1-1h4l1 1v-1" fill="red" color="#000" font-family="sans-serif" font-weight="400" overflow="visible"/></svg>
+		</image-src>
         <script type="text/javascript">/* src="main.js" */
-			$(document).ready(function() {
+			let save = {
+				lists: [
+					{
+						title: "List 1",
+						items: [
+							{
+								name: "Task 1",
+								state: false
+							},
+							{
+								name: "Task 2",
+								state: false
+							},
+							{
+								name: "Task 3",
+								state: false
+							},
+							{
+								name: "Task 4",
+								state: false
+							},
+							{
+								name: "Task 5",
+								state: false
+							}
+						],
+						top: "80px",
+						left: "10px",
+						width: "350px",
+						height: "219px"
+					}
+				]
+			}
+			
+			function createList(save){
+				let list = save.lists[0];
+				
+				$(".rename-later").append('<div class="list" id="list-0" style="top: '+list.top+'; left: '+list.left+'; width: '+list.width+'; height: '+list.height+';"></div>');
+				$("#list-0").append('<div class="list-header" id="list-0-header"></div>');
+				$("#list-0-header").append("<table></table>");
+				$("#list-0-header table").append('<tr></tr>');
+				$("#list-0-header table tr").append('<td class="title"></td>');
+				$("#list-0-header table tr").append('<td class="header-drag-handler"></td>');
+				$("#list-0-header table tr").append('<td class="X" id="list-0-X"></td>');
+				$("#list-0-header table tr .title").html(list.title);
+				$("#list-0-header table tr .header-drag-handler").append('<div class="header-drag-handler-img grab" id="list-0-header-drag-handler-img"></div>');
+				$("#header-drag-handler-src svg").clone().appendTo("#list-0-header-drag-handler-img");
+				$("#X-src svg").clone().appendTo("#list-0-X");
+				$("#list-0").append('<table id="list-0-table" class="list-content">');
+				if(list.items.length != 0){
+					$("#list-0-table").append('<tr id="list-0-row-1"></tr>');
+					$("#list-0-row-1").append('<td class="row-drag-handler"></td>');
+					$("#list-0-row-1 .row-drag-handler").append('<div class="row-drag-handler-img grab"></div>');
+					$("#row-drag-handler-src svg").clone().appendTo("#list-0-row-1 .row-drag-handler .row-drag-handler-img");
+					$("#list-0-row-1").append('<td id="list-0-row-1-task"></td>');
+					$("#list-0-row-1-task").append('<input type="text" placeholder="' + list.items[0].name +'" />');
+					$("#list-0-row-1").append('<td class="check"></td>');
+					$("#list-0-row-1 .check").append('<input type="checkbox" ' + (list.items[0].state ? "checked ":"") + "/>");
+					$("#list-0-row-1").append('<td class="trash"></td>');
+					$("#list-0-row-1 .trash").append('<div class="trash-img"></div>');
+					$("#trash-src svg").clone().appendTo("#list-0-row-1 .trash .trash-img");
+				}
+				for(var i = 2; i <= list.items.length; i++){
+					$("#list-0-table").append('<tr id="list-0-row-' + i + '"></tr>');
+					$("#list-0-row-1 .row-drag-handler").clone().appendTo("#list-0-row-" + i);
+					$("#list-0-row-" + i).append('<td id="list-0-row-' + i + '-task"></td>');
+					$("#list-0-row-" + i + "-task").append('<input type="text" placeholder="' + list.items[i-1].name +'" />');
+					$("#list-0-row-1 .check").clone().appendTo("#list-0-row-" + i)
+					$("#list-0-row-1 .trash").clone().appendTo("#list-0-row-" + i)
+				}
+				$("#list-0").append('<div id="list-0-footer" class="list-footer">SampleSample</div>');
+			}
+			
+			$(document).ready(function(){
 				// Initialise the table
 				
 				function dragElement(elmnt) {
@@ -23,13 +108,8 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 						pos2 = 0,
 						pos3 = 0,
 						pos4 = 0;
-					if (header = document.getElementById(elmnt.id + "-header-drag-handler-img")) {
-						/* if present, the header is where you move the DIV from:*/
-						header.onmousedown = dragMouseDown;
-					} else {
-						/* otherwise, move the DIV from anywhere inside the DIV:*/
-						elmnt.onmousedown = dragMouseDown;
-					}
+					
+					document.getElementById(elmnt.id + "-header-drag-handler-img").onmousedown = dragMouseDown;
 
 					function dragMouseDown(e) {
 						e = e || window.event;
@@ -58,6 +138,8 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 					}
 				}
 
+				/* Prototype
+				
 				dragElement(document.getElementById("list-1"));
 				$("#list-1-table").tableDnD({
 					onDrop: function(){
@@ -67,6 +149,18 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 					dragHandle: ".row-drag-handler"
 				});
 				$("#list-1-table tbody tr:even").addClass("even-row");
+				*/
+				
+				createList(save);
+				dragElement(document.getElementById("list-0"));
+				$("#list-0-table").tableDnD({
+					onDrop: function(){
+						$("#list-0-table tbody tr").removeClass("even-row");
+						$("#list-0-table tbody tr:even").addClass("even-row");
+					},
+					dragHandle: ".row-drag-handler"
+				});
+				$("#list-0-table tbody tr:even").addClass("even-row");
 			});
 		</script>
 		<div class="container">
@@ -79,8 +173,8 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 				</h1>
 			</div>
 			<div class="rename-later">
-				<div class="list" id="list-1">
-					<div class="list-header">
+				<!--div class="list" id="list-1">
+					<div class="list-header" id="list-1-header">
 						<table>
 							<tr>
 								<td class="title">
@@ -96,14 +190,6 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 								</td>
 							</tr>
 						</table>
-						<!--div class="title">
-							Very very long title for list 1
-						</div>
-						<div class="header-drag-handler">
-							<div class="header-drag-handler-img grab" id="list-1-header-drag-handler-img">
-								<svg viewBox="0 0 90 25"><g fill="none" stroke="#888" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"><path d="M2.5 2.5h85M2.5 12.5h85M2.5 22.5h85"/></g></svg>
-							</div>
-						</div-->
 					</div>
 					<table id="list-1-table" class="list-content">
 						<tbody>
@@ -117,10 +203,12 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 									<input type="text" placeholder="Task 1" />
 								</td>
 								<td>
-									Sample1
+									<input type="checkbox" />
 								</td>
 								<td>
-									Sample2
+									<div class="trash-img">
+										<svg viewBox="0 0 50 50"><path fill="none" stroke="red" stroke-linecap="square" stroke-linejoin="round" stroke-width="2" d="M15 14l2 25h16l2-25"/><path fill="none" stroke="red" stroke-width="2" d="M21 18v16m4-16v16m4-16v16M12 13h26"/><path fill="none" stroke="red" stroke-linejoin="round" stroke-width="2" d="M21 12V9h8v3"/><path d="M21 8a1 1 0 00-1 1v3h2v-2h6v2h2V9a1 1 0 00-1-1h-8z" fill="red" color="#000" font-family="sans-serif" font-weight="400" overflow="visible"/><path d="M22 10v1l1-1h4l1 1v-1" fill="red" color="#000" font-family="sans-serif" font-weight="400" overflow="visible"/></svg>
+									</div>
 								</td>
 							</tr>
 							<tr id="list-1-row-2">
@@ -133,10 +221,12 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 									<input type="text" placeholder="Task 2" />
 								</td>
 								<td>
-									Sample3
+									<input type="checkbox" />
 								</td>
 								<td>
-									Sample4
+									<div class="trash-img">
+										<svg viewBox="0 0 50 50"><path fill="none" stroke="red" stroke-linecap="square" stroke-linejoin="round" stroke-width="2" d="M15 14l2 25h16l2-25"/><path fill="none" stroke="red" stroke-width="2" d="M21 18v16m4-16v16m4-16v16M12 13h26"/><path fill="none" stroke="red" stroke-linejoin="round" stroke-width="2" d="M21 12V9h8v3"/><path d="M21 8a1 1 0 00-1 1v3h2v-2h6v2h2V9a1 1 0 00-1-1h-8z" fill="red" color="#000" font-family="sans-serif" font-weight="400" overflow="visible"/><path d="M22 10v1l1-1h4l1 1v-1" fill="red" color="#000" font-family="sans-serif" font-weight="400" overflow="visible"/></svg>
+									</div>
 								</td>
 							</tr>
 							<tr id="list-1-row-3">
@@ -149,10 +239,12 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 									<input type="text" placeholder="Task 3" />
 								</td>
 								<td>
-									Sample5
+									<input type="checkbox" />
 								</td>
 								<td>
-									Sample6
+									<div class="trash-img">
+										<svg viewBox="0 0 50 50"><path fill="none" stroke="red" stroke-linecap="square" stroke-linejoin="round" stroke-width="2" d="M15 14l2 25h16l2-25"/><path fill="none" stroke="red" stroke-width="2" d="M21 18v16m4-16v16m4-16v16M12 13h26"/><path fill="none" stroke="red" stroke-linejoin="round" stroke-width="2" d="M21 12V9h8v3"/><path d="M21 8a1 1 0 00-1 1v3h2v-2h6v2h2V9a1 1 0 00-1-1h-8z" fill="red" color="#000" font-family="sans-serif" font-weight="400" overflow="visible"/><path d="M22 10v1l1-1h4l1 1v-1" fill="red" color="#000" font-family="sans-serif" font-weight="400" overflow="visible"/></svg>
+									</div>
 								</td>
 							</tr>
 							<tr id="list-1-row-4">
@@ -165,10 +257,12 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 									<input type="text" placeholder="Task 4" />
 								</td>
 								<td>
-									Sample7
+									<input type="checkbox" />
 								</td>
 								<td>
-									Sample8
+									<div class="trash-img">
+										<svg viewBox="0 0 50 50"><path fill="none" stroke="red" stroke-linecap="square" stroke-linejoin="round" stroke-width="2" d="M15 14l2 25h16l2-25"/><path fill="none" stroke="red" stroke-width="2" d="M21 18v16m4-16v16m4-16v16M12 13h26"/><path fill="none" stroke="red" stroke-linejoin="round" stroke-width="2" d="M21 12V9h8v3"/><path d="M21 8a1 1 0 00-1 1v3h2v-2h6v2h2V9a1 1 0 00-1-1h-8z" fill="red" color="#000" font-family="sans-serif" font-weight="400" overflow="visible"/><path d="M22 10v1l1-1h4l1 1v-1" fill="red" color="#000" font-family="sans-serif" font-weight="400" overflow="visible"/></svg>
+									</div>
 								</td>
 							</tr>
 							<tr id="list-1-row-5">
@@ -181,10 +275,12 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 									<input type="text" placeholder="Task 5" />
 								</td>
 								<td>
-									Sample9
+									<input type="checkbox" />
 								</td>
 								<td>
-									Sample0
+									<div class="trash-img">
+										<svg viewBox="0 0 50 50"><path fill="none" stroke="red" stroke-linecap="square" stroke-linejoin="round" stroke-width="2" d="M15 14l2 25h16l2-25"/><path fill="none" stroke="red" stroke-width="2" d="M21 18v16m4-16v16m4-16v16M12 13h26"/><path fill="none" stroke="red" stroke-linejoin="round" stroke-width="2" d="M21 12V9h8v3"/><path d="M21 8a1 1 0 00-1 1v3h2v-2h6v2h2V9a1 1 0 00-1-1h-8z" fill="red" color="#000" font-family="sans-serif" font-weight="400" overflow="visible"/><path d="M22 10v1l1-1h4l1 1v-1" fill="red" color="#000" font-family="sans-serif" font-weight="400" overflow="visible"/></svg>
+									</div>
 								</td>
 							</tr>
 						</tbody>
@@ -192,7 +288,7 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 					<div id="list-1-footer" class="list-footer">
 						SampleSample
 					</div>
-				</div>
+				</div--> <!-- Prototype -->
 			</div><!-- End of .rename-later -->
 		</div><!-- end of .container -->
 	</body>
