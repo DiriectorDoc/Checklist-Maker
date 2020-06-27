@@ -2,15 +2,23 @@
 	background: #eee;
 }
 .grab {
-	cursor: grab;
 	cursor: move;
-	cursor: -moz-grab;
 	cursor: -webkit-grab;
+	cursor: -moz-grab;
+	cursor: grab;
 }
 .grabbed {
-	cursor: grabbing;
-	cursor: -moz-grabbing;
 	cursor: -webkit-grabbing;
+	cursor: -moz-grabbing;
+	cursor: grabbing;
+}
+#header {
+	background: #800;
+	margin: 0;
+	padding: 20px 1.5em 1px 1.5em;
+}
+#header h1 {
+	margin-bottom: 5px;
 }
 .header-drag-handler {
 	padding: 2pt;
@@ -27,12 +35,13 @@
 	pointer-events: none;
 }
 .list {
+	background: #eef;
 	border: 2px solid;
 	display: inline-block;
 	min-height: 5em;
-	min-width: fit-content;
 	min-width: -webkit-fit-content;
-	overflow: auto;
+	min-width: fit-content;
+	overflow: hidden;
 	position: absolute;
 	resize: both;
 	width: 350px;
@@ -44,8 +53,8 @@
 	background: #fff;
 }
 .list-footer {
-	background: #eef;
-	height: auto;
+	display: flex;
+	min-height: 1.4em;
 	width: 100%;
 }
 .list-header {
@@ -83,8 +92,24 @@
 	display: block;
 	max-height: 1.4em;
 }
+.hidden {
+	display: none;
+}
+.picked-up {
+	background: #bbb;
+}
+.text {
+	width: 90%;
+}
+.task {
+	display: inline-block;
+    overflow: hidden;
+	text-overflow: ellipsis;
+    white-space: nowrap;
+}
 .X {
 	max-width: -webkit-fit-content;
+	min-width: fit-content;
 	padding-right: .33em;
 	text-align: right;
 }
@@ -93,6 +118,7 @@
 }
 body {
 	background: #555;
+	margin: 0;
 }
 image-src {
 	display: none;
@@ -117,4 +143,13 @@ td {
 }
 tr {
 	padding: 0;
+}
+#version-info {
+	bottom: 3px;
+	display: block;
+	left: 3px;
+	position: absolute;
+}
+* {
+	font-family: Arial, Helvetica, sans-serif;
 }
