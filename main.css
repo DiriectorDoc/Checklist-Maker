@@ -1,120 +1,5 @@
-.even-row {
-	background: #eee;
-}
-.grab {
-	cursor: move;
-	cursor: -webkit-grab;
-	cursor: -moz-grab;
-	cursor: grab;
-}
-.grabbed {
-	cursor: -webkit-grabbing;
-	cursor: -moz-grabbing;
-	cursor: grabbing;
-}
-#header {
-	background: #800;
-	margin: 0;
-	padding: 20px 1.5em 1px 1.5em;
-}
-#header h1 {
-	margin-bottom: 5px;
-}
-.header-drag-handler {
-	padding: 2pt;
-}
-.header-drag-handler-img {
-	display: block;
-	height: 1em;
-	margin: auto;
-	width: fit-content;
-	width: -webkit-fit-content;
-}
-.header-drag-handler-img svg {
-	height: inherit;
-	pointer-events: none;
-}
-.list {
-	background: #eef;
-	border: 2px solid;
-	display: inline-block;
-	min-height: 5em;
-	min-width: -webkit-fit-content;
-	min-width: fit-content;
-	overflow: hidden;
-	position: absolute;
-	resize: both;
-	width: 350px;
-}
-.list table {
-	width: 100%;
-}
-.list-content tbody {
-	background: #fff;
-}
-.list-footer {
-	display: flex;
-	min-height: 1.4em;
-	width: 100%;
-}
-.list-header {
-	background: #ccf;
-}
-.row-drag-handler-img svg {
-	height: 1.4em;
-	pointer-events: none;
-}
-.social {
-	float: right;
-}
-.social a {
-	margin: 5px;
-}
-.social svg {
-	height: 20px;
-	max-width: 25px;
-	transition: all 250ms ease-out;
-}
-.social svg:hover {
-	transform: scale(1.5);
-}
-.title {
-	float: left;
-	margin-left: .33em;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-.trash-img {
-	width: 100%;
-}
-.trash-img svg {
-	display: block;
-	max-height: 1.4em;
-}
-.hidden {
-	display: none;
-}
-.picked-up {
-	background: #bbb;
-}
-.text {
-	width: 90%;
-}
-.task {
-	display: inline-block;
-    overflow: hidden;
-	text-overflow: ellipsis;
-    white-space: nowrap;
-}
-.X {
-	max-width: -webkit-fit-content;
-	min-width: fit-content;
-	padding-right: .33em;
-	text-align: right;
-}
-.X svg {
-	height: 1em;
+* {
+	font-family: Arial, Helvetica, sans-serif;
 }
 body {
 	background: #555;
@@ -144,12 +29,139 @@ td {
 tr {
 	padding: 0;
 }
+.even-row {
+	background: #eee;
+}
+.grab {
+	cursor: move;
+	cursor: -webkit-grab;
+	cursor: -moz-grab;
+	cursor: grab;
+}
+.grabbed {
+	cursor: -webkit-grabbing;
+	cursor: -moz-grabbing;
+	cursor: grabbing;
+}
+.header-drag-handler {
+	padding: 2pt;
+}
+.header-drag-handler-img svg {
+	height: inherit;
+	pointer-events: none;
+}
+.header-drag-handler-img {
+	display: block;
+	height: 1em;
+	margin: auto;
+	width: -webkit-fit-content;
+	width: fit-content;
+}
+.hidden {
+	display: none;
+}
+.inner {
+	height: 100%;
+}.list table {
+	width: 100%;
+}
+.list {
+	background: #eef;
+	border: 2px solid;
+	display: inline-block;
+	min-height: 5em;
+	min-width: -webkit-fit-content;
+	min-width: fit-content;
+	overflow: hidden;
+	position: absolute;
+	resize: both;
+	width: 350px;
+}
+.list-content tbody {
+	background: #fff;
+}
+.list-footer {
+	display: flex;
+	min-height: 1.4em;
+	width: 100%;
+}
+.list-header {
+	background: #ccf;
+}
+.picked-up {
+	background: #bbb;
+}
+.progress-bar {
+	background: #ccc;
+	border: 2px #aaa solid;
+	float: right;
+	margin: 2px 0;
+	width: 50%;
+}
+.row-drag-handler-img svg {
+	height: 1.4em;
+	pointer-events: none;
+}
+.social a {
+	margin: 5px;
+}
+.social svg {
+	height: 20px;
+	max-width: 25px;
+	transition: all 250ms ease-out;
+}
+.social svg:hover {
+	transform: scale(1.5);
+}
+.social {
+	float: right;
+}
+.task {
+	display: inline-block;
+    overflow: hidden;
+	text-overflow: ellipsis;
+    white-space: nowrap;
+	word-break: break-all;
+}
+.text {
+	width: 90%;
+}
+.title {
+	float: left;
+	margin-left: .33em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.trash-img svg {
+	display: block;
+	max-height: 1.4em;
+}
+.trash-img {
+	width: 100%;
+}
+.X svg {
+	height: 1em;
+}
+.X {
+	max-width: -webkit-fit-content;
+	min-width: -webkit-fit-content;
+	max-width: fit-content;
+	min-width: fit-content;
+	padding-right: .33em;
+	text-align: right;
+}
+#header h1 {
+	margin-bottom: 5px;
+}
+#header {
+	background: #800;
+	margin: 0;
+	padding: 20px 1.5em 1px 1.5em;
+}
 #version-info {
 	bottom: 3px;
 	display: block;
 	left: 3px;
 	position: absolute;
-}
-* {
-	font-family: Arial, Helvetica, sans-serif;
 }
