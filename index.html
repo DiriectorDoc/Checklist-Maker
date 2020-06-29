@@ -12,6 +12,8 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 		<link rel="icon" type="image/png" href="icon.png">
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/TableDnD/0.9.1/jquery.tablednd.js" integrity="sha256-d3rtug+Hg1GZPB7Y/yTcRixO/wlI78+2m08tosoRn7A=" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="css-element-queries-by-marcj/ElementQueries.js"></script>
+		<script type="text/javascript" src="css-element-queries-by-marcj/ResizeSensor.js"></script>
     </head>
 	<body>
 		<image-src id="header-drag-handler-src">
@@ -61,8 +63,6 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 				]
 			}
 			
-			// Green: hsl(120, 100%, 50%);
-			
 			/* This function creates the list in its entirty; quite messily, I might add. */
 			function createList(save){
 				let list = save.lists[0];
@@ -96,8 +96,8 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 					$("#row-drag-handler-src svg").clone().appendTo("#list-0-row-1 .row-drag-handler .row-drag-handler-img");
 					$("#list-0-row-1").append('<td id="list-0-row-1-task"></td>');
 					$("#list-0-row-1-task").append('<input class="text" type="text" placeholder="' + list.items[0].value +'" />');
-					$("#list-0-row-1-task").append('<span class="task hidden" onclick="$(\'#list-0-row-1-task span\').addClass(\'hidden\').removeClass(\'task\'); $(\'#list-0-row-1-task input\').removeClass(\'hidden\'); return false;"></span>');
-					$("#list-0-row-1").append('<td class="check"><input type="checkbox" ' + (list.items[0].state ? "checked ":"") + "/></td>");
+					$("#list-0-row-1-task").append('<span class="hidden" onclick="$(\'#list-0-row-1-task span\').addClass(\'hidden\').removeClass(\'task\'); $(\'#list-0-row-1-task input\').removeClass(\'hidden\'); return false;"></span>');
+					$("#list-0-row-1").append('<td class="check"><input type="checkbox" onclick="updateProgressBar(\'#list-0\')" ' + (list.items[0].state ? "checked ":"") + "/></td>");
 					$("#list-0-row-1").append('<td class="trash"><div class="trash-img"></div></td>');
 					$("#trash-src svg").clone().appendTo("#list-0-row-1 .trash .trash-img");
 					
@@ -109,64 +109,23 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 					$("#list-0-row-1 .row-drag-handler").clone().appendTo("#list-0-row-" + i);
 					$("#list-0-row-" + i).append('<td id="list-0-row-' + i + '-task"></td>');
 					$("#list-0-row-" + i + "-task").append('<input class="text" type="text" placeholder="' + list.items[i-1].value +'" />');
-					$("#list-0-row-" + i + "-task").append('<span class="task hidden" onclick="$(\'#list-0-row-' + i + '-task span\').addClass(\'hidden\').removeClass(\'task\'); $(\'#list-0-row-' + i + '-task input\').removeClass(\'hidden\'); return false;"></span>');
+					$("#list-0-row-" + i + "-task").append('<span class="hidden" onclick="$(\'#list-0-row-' + i + '-task span\').addClass(\'hidden\').removeClass(\'task\'); $(\'#list-0-row-' + i + '-task input\').removeClass(\'hidden\'); return false;"></span>');
 					$("#list-0-row-1 .check").clone().appendTo("#list-0-row-" + i)
 					$("#list-0-row-1 .trash").clone().appendTo("#list-0-row-" + i)
 					
 					addKeyListener(0, i);
 				}
-				$("#list-0").append('<div id="list-0-footer" class="list-footer">SampleSample</div>');
-				$("#list-0").css("min-height", $("#list-0-header").height() + $("#list-0-table").height() + $("#list-0-footer").height() + "px");	
-			}
-			
-			$(document).ready(function(){
-				// Initialise the table
+				$("#list-0").append('<div id="list-0-footer" class="list-footer"><div style="width:40%" temp/><div class="progress-bar"><div id="list-0-progress-bar" class="inner" /></div></div>');
+				$("#list-0").css("min-height", $("#list-0-header").height() + $("#list-0-table").height() + $("#list-0-footer").height() + "px");
 				
-				function dragElement(elmnt) {
-					let pos1 = 0,
-						pos2 = 0,
-						pos3 = 0,
-						pos4 = 0;
-					
-					$("#" + elmnt.id + "-header-drag-handler-img")[0].onmousedown = dragMouseDown;
-
-					function dragMouseDown(e) {
-						e = e || window.event;
-						e.preventDefault();
-						// get the mouse cursor position at startup:
-						pos3 = e.clientX;
-						pos4 = e.clientY;
-						document.onmouseup = function(){
-							/* stop moving when mouse button is released:*/
-							document.onmouseup = null;
-							document.onmousemove = null;
-						};
-						// call a function whenever the cursor moves:
-						document.onmousemove = function(e){
-							e = e || window.event;
-							e.preventDefault();
-							// calculate the new cursor position:
-							pos1 = pos3 - e.clientX;
-							pos2 = pos4 - e.clientY;
-							pos3 = e.clientX;
-							pos4 = e.clientY;
-							
-							// the element's new co-ordinates:
-							let newX = elmnt.offsetLeft - pos1,
-								newY = elmnt.offsetTop - pos2;
-							
-							// newX + $(elmnt).width() is the co-ordinate of the rightmost edge (+4 for the border, 2px on each side)
-							if(newX + $(elmnt).width() + 4 < $(window).width() && newX > 0){
-								elmnt.style.left = newX + "px";
-							}
-							if(newY + $(elmnt).height() + 4 < $(window).height() && newY > $("#header").height() + 21){
-								elmnt.style.top = newY + "px";
-							}
-						};
+				/* Listener for when the list is resized */
+				new ResizeSensor($("#list-0")[0], function() {
+					for(var i = 0; i < $("#list-0 span.task").length; i++){
+						let span = $($("#list-0 span.task")[i]);
+						span.width(span.parent().width() * .9);
 					}
-				}
+				});
 				
-				createList(save);
 				dragElement(document.getElementById("list-0"));
 				$("#list-0-table").tableDnD({
 					onDragClass: "picked-up",
@@ -177,10 +136,66 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 					dragHandle: ".row-drag-handler"
 				});
 				$("#list-0-table tbody tr:even").addClass("even-row");
+			}
+			
+			function dragElement(elmnt) {
+				let pos1 = 0,
+					pos2 = 0,
+					pos3 = 0,
+					pos4 = 0;
+
+				$("#" + elmnt.id + "-header-drag-handler-img")[0].onmousedown = dragMouseDown;
+
+				function dragMouseDown(e) {
+					e = e || window.event;
+					e.preventDefault();
+					// get the mouse cursor position at startup:
+					pos3 = e.clientX;
+					pos4 = e.clientY;
+					document.onmouseup = function(){
+						/* stop moving when mouse button is released:*/
+						document.onmouseup = null;
+						document.onmousemove = null;
+					};
+					// call a function whenever the cursor moves:
+					document.onmousemove = function(e){
+						e = e || window.event;
+						e.preventDefault();
+						// calculate the new cursor position:
+						pos1 = pos3 - e.clientX;
+						pos2 = pos4 - e.clientY;
+						pos3 = e.clientX;
+						pos4 = e.clientY;
+
+						// the element's new co-ordinates:
+						let newX = elmnt.offsetLeft - pos1,
+							newY = elmnt.offsetTop - pos2;
+
+						// newX + $(elmnt).width() is the co-ordinate of the rightmost edge (+4 for the border, 2px on each side)
+						if(newX + $(elmnt).width() + 4 < $(window).width() && newX > 0){
+							elmnt.style.left = newX + "px";
+						}
+						if(newY + $(elmnt).height() + 4 < $(window).height() && newY > $("#header").height() + 21){
+							elmnt.style.top = newY + "px";
+						}
+					};
+				}
+			}
+			
+			function updateProgressBar(id){
+				let percent = $(id + " input:checked").length / $(id + " input[type=checkbox]").length,
+					bar = $(id + "-progress-bar");
+				bar.width((percent*100) + "%");
+				bar.css("background-color", "hsl(" + (percent*120) + ", 100%, 50%)");
+			}
+			
+			$(document).ready(function(){
+				// Initialise the table
+				createList(save);
 			});
 		</script>
 		<div class="container">
-			<span id="version-info">v0.1.2_alpha &mdash; D-Doc, 2020</span>
+			<span id="version-info">v0.1.3_alpha &mdash; D-Doc, 2020</span>
 			<div id="header">
 				<div class="social">
 					<a href="https://github.com/DiriectorDoc/Checklist-Maker"><svg viewBox="0 0 16 16" id="github"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg></a>
