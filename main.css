@@ -5,7 +5,7 @@ body {
 	background: #555;
 	margin: 0;
 }
-image-src {
+image-src, list-info {
 	display: none;
 }
 svg {
@@ -31,6 +31,10 @@ tr {
 }
 .even-row {
 	background: #eee;
+}
+.list-footer-left {
+	padding-left: 1em;
+	width:40%
 }
 .grab {
 	cursor: move;
@@ -62,17 +66,22 @@ tr {
 }
 .inner {
 	height: 100%;
-}.list table {
+}
+.list table {
 	width: 100%;
 }
 .list {
-	background: #eef;
+	background: #DADAFF;
 	border: 2px solid;
 	display: inline-block;
+	max-height: calc(90% - 3em - 5px);
+	max-width: 90%;
 	min-height: 5em;
 	min-width: -webkit-fit-content;
 	min-width: fit-content;
 	overflow: hidden;
+	overflow-y: auto;
+	-ms-overflow-y: auto;
 	position: absolute;
 	resize: both;
 	width: 350px;
@@ -86,12 +95,27 @@ tr {
 	width: 100%;
 }
 .list-header {
-	background: #ccf;
+	background: #bbf;
 }
 .picked-up {
 	background: #bbb;
 }
-.progress-bar {
+.plus-img svg {
+	height: 1.4em;
+	stroke: #aaa;
+}
+.plus-img:hover svg {
+	stroke: #000;
+}
+.plus-img {
+	max-width: -webkit-fit-content;
+	max-width: fit-content;
+	padding-top: 1.2pt;
+}
+.plus-img:hover {
+	cursor: pointer;
+}
+.progress-bar-shell {
 	background: #ccc;
 	border: 2px #aaa solid;
 	float: right;
@@ -137,8 +161,17 @@ tr {
 	display: block;
 	max-height: 1.4em;
 }
+.trash-img:hover svg path[fill="none"] {
+	stroke: #000;
+}
+.trash-img:hover svg path[fill="red"] {
+	fill: #000;
+}
 .trash-img {
 	width: 100%;
+}
+.trash-img:hover {
+	cursor: pointer;
 }
 .X svg {
 	height: 1em;
@@ -155,7 +188,7 @@ tr {
 	margin-bottom: 5px;
 }
 #header {
-	background: #800;
+	background: #55a;
 	margin: 0;
 	padding: 20px 1.5em 1px 1.5em;
 }
