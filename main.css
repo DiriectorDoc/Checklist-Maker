@@ -5,7 +5,7 @@ body {
 	background: #555;
 	margin: 0;
 }
-image-src, list-info {
+image-src, info-data {
 	display: none;
 }
 svg {

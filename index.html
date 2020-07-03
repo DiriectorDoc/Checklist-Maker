@@ -9,33 +9,13 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
     	<meta charset="utf-8">
         <title>Checklist</title>
         <link href="main.css" rel="stylesheet" type="text/css">
-		<link rel="icon" type="image/png" href="icon.png">
+		<link rel="icon" type="image/png" href="icon/icon.png">
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/TableDnD/0.9.1/jquery.tablednd.js" integrity="sha256-d3rtug+Hg1GZPB7Y/yTcRixO/wlI78+2m08tosoRn7A=" crossorigin="anonymous"></script>
-		<script type="text/javascript" src="css-element-queries-by-marcj/ElementQueries.js"></script>
+		<!--script type="text/javascript" src="css-element-queries-by-marcj/ElementQueries.js"></script-->
 		<script type="text/javascript" src="css-element-queries-by-marcj/ResizeSensor.js"></script>
-    </head>
-	<body>
-		<image-src id="header-drag-handler-src">
-			<svg viewBox="0 0 90 25"><g fill="none" stroke="#888" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"><path d="M2.5 2.5h85M2.5 12.5h85M2.5 22.5h85"/></g></svg>
-		</image-src>
-		<image-src id="X-src">
-			<svg viewBox="0 0 16 16"><g stroke-linecap="round" stroke-linejoin="round"><path fill="#cd0000" stroke="#900" d="M.5.5h15v15H.5z"/><path fill="none" stroke="gray" stroke-width="2" d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></g></svg>
-		</image-src>
-		<image-src id="row-drag-handler-src">
-			<svg viewBox="0 0 35 35"><path fill="none" stroke="#888" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M7.5 7.5h20m-20 10h20m-20 10h20"/></svg>
-		</image-src>
-		<image-src id="trash-src">
-			<svg viewBox="0 0 50 50"><path fill="none" stroke="red" stroke-linecap="square" stroke-linejoin="round" stroke-width="2" d="M15 14l2 25h16l2-25"/><path fill="none" stroke="red" stroke-width="2" d="M21 18v16M25 18l.0139 16M29 18v16M12 13h26"/><path fill="none" stroke="red" stroke-linejoin="round" stroke-width="2" d="M21 12V9h8v3"/><path d="M21 8a1.0001 1.0001 0 00-1 1v3h2v-2h6v2h2V9a1.0001 1.0001 0 00-1-1h-8z"  fill="red" color="#000" overflow="visible"/><path d="M22 10v1c0-.558324.441676-1 1-1h4c.558324 0 1 .441676 1 1v-1"  fill="red" color="#000" overflow="visible"/></svg>
-			<!-- This graphic is a recoloured and compressed copy of [[File:Иконка мусорки.svg]] by Alexander Madyankin-->
-			<!-- This graphic was made available using the MIT licence -->
-			<!-- Copyright © 2014 Alexander Madyankin, Roman Shamin -->
-			<!-- Original file and full licence located at https://commons.wikimedia.org/wiki/File:%D0%98%D0%BA%D0%BE%D0%BD%D0%BA%D0%B0_%D0%BC%D1%83%D1%81%D0%BE%D1%80%D0%BA%D0%B8.svg -->
-		</image-src>
-		<image-src id="plus-src">
-			<svg viewBox="0 0 20 20"><g fill="none" stroke-width="5"><path d="M10 0v20M0 10h20"/></g></svg>
-		</image-src>
-        <script type="text/javascript">/* src="main.js" */
+        <script type="text/javascript" src="main.js"></script>
+		<script type="text/javascript">
 			let save = {
 				lists: [
 					{
@@ -71,237 +51,34 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 				]
 			}
 			
-			/* This function creates the list in its entirty; quite messily, I might add. */
-			function createList(save){
-				let list = save.lists[0];
-				
-				$(".rename-later").append('<div id="list-0" class="list" style="top: '+list.top+'; left: '+list.left+'; width: '+list.width+'; height: '+list.height+';">');
-				
-				$("#list-0").append('<div id="list-0-header" class="list-header">');
-				$("#list-0").append('<table id="list-0-table" class="list-content">');
-				$("#list-0").append('<div id="list-0-footer" class="list-footer">');
-				$("#list-0").append('<list-info>');
-				
-				$("#list-0-header").append('<table>');
-				$("#list-0-header table").append('<tr>');
-				
-				$("#list-0-header table tr").append('<td class="title">');
-				$("#list-0-header table tr").append('<td class="header-drag-handler">');
-				$("#list-0-header table tr").append('<td id="list-0-X" class="X">');
-				
-				$("#list-0-header table tr td.title").html(list.title);
-				$("#list-0-header table tr td.header-drag-handler").append('<div id="list-0-header-drag-handler-img" class="header-drag-handler-img grab">');
-				
-				$("#header-drag-handler-src svg").clone().appendTo("#list-0-header-drag-handler-img");
-				$("#X-src svg").clone().appendTo("#list-0-X");
-				
-				for(var i = 0; i < list.items.length; i++){
-					createRow(0, i);
-					
-					if(list.items[i].value){
-						$("#list-0-row-" + i + "-task span").html(list.items[i].value).addClass("task").removeClass("hidden");
-						$("#list-0-row-" + i + "-task input").val(list.items[i].value).addClass("hidden");
-					} else {
-						hideSpan(0, i);
-					}
-					
-					$("#list-0-row-" + i + " td.check input").attr("checked", list.items[i].checked);
-				}
-				
-				$("#list-0-footer").append('<div class="list-footer-left">');
-				$("#list-0-footer").append('<div class="progress-bar-shell">');
-				
-				$("#list-0-footer .list-footer-left").append('<div class="plus-img" onclick="addRow(0)">');
-				$("#list-0-footer .progress-bar-shell").append('<div id="list-0-progress-bar" class="inner" />');
-				
-				$("#plus-src svg").clone().appendTo("#list-0-footer .plus-img");
-				
-				updateProgressBar("#list-0");
-				
-				/* Technical variables */
-				$("#list-0 list-info").append('<counter>');
-				$("#list-0 list-info").append('<total-rows>');
-				
-				$("#list-0 counter").html(list.items.length);
-				$("#list-0 total-rows").html(list.items.length);
-				
-				/* Adding css to various elements */
-				setHeight(0);
-				$("#list-0-table tbody tr:even").addClass("even-row");
-				
-				/* Listener for when the list is resized */
-				new ResizeSensor($("#list-0")[0], function() {
-					for(var i = 0; i < $("#list-0 span.task").length; i++){
-						let span = $($("#list-0 span.task")[i]);
-						span.width(span.parent().width() * .9);
-					}
-				});
-				
-				bindTableDnD(0);
-				
-				dragElement($("#list-0")[0]);
-			}
-			
-			function dragElement(elmnt) {
-				let pos1 = 0,
-					pos2 = 0,
-					pos3 = 0,
-					pos4 = 0;
-
-				$("#" + elmnt.id + "-header-drag-handler-img")[0].onmousedown = dragMouseDown;
-
-				function dragMouseDown(e) {
-					e = e || window.event;
-					e.preventDefault();
-					// get the mouse cursor position at startup:
-					pos3 = e.clientX;
-					pos4 = e.clientY;
-					document.onmouseup = function(){
-						/* stop moving when mouse button is released:*/
-						document.onmouseup = null;
-						document.onmousemove = null;
-					};
-					// call a function whenever the cursor moves:
-					document.onmousemove = function(e){
-						e = e || window.event;
-						e.preventDefault();
-						// calculate the new cursor position:
-						pos1 = pos3 - e.clientX;
-						pos2 = pos4 - e.clientY;
-						pos3 = e.clientX;
-						pos4 = e.clientY;
-
-						// the element's new co-ordinates:
-						let newX = elmnt.offsetLeft - pos1,
-							newY = elmnt.offsetTop - pos2;
-
-						// newX + $(elmnt).width() is the co-ordinate of the rightmost edge (+4 for the border, 2px on each side)
-						if(newX + $(elmnt).width() + 4 < $(window).width() && newX > 0){
-							elmnt.style.left = newX + "px";
-						}
-						if(newY + $(elmnt).height() + 4 < $(window).height() && newY > $("#header").height() + 21){
-							elmnt.style.top = newY + "px";
-						}
-					};
-				}
-			}
-			
-			function addKeyListener(list, row){
-				$("#list-" + list + "-row-" + row + "-task input").on("keypress", function(e){
-					let span = $("#list-" + list + "-row-" + row + "-task span"),
-						input = $("#list-" + list + "-row-" + row + "-task input"),
-						field = $.trim(input.val());
-					// if the enter key is pressed and the text box isn't blank
-					if (e.keyCode == 13 && field) {
-						span.html(field);
-						span.removeClass("hidden").addClass("task");
-						input.addClass("hidden");
-						return false; // this part may or may not be important
-					}
-				});
-			}
-				
-			function hideSpan(list, row){
-				$("#list-" + list + "-row-" + row + "-task span").addClass('hidden').removeClass('task');
-				$("#list-" + list + "-row-" + row + "-task input").removeClass('hidden');
-				return false;
-			}
-			
-			function updateProgressBar(id){
-				let ratio = $(id + " input:checked").length / $(id + " input[type=checkbox]").length,
-					bar = $(id + "-progress-bar");
-				bar.width(ratio*100 + "%");
-				bar.css("background-color", "hsl(" + ratio*120 + ", 100%, 50%)");
-			}
-			
-			function createRow(list, row){
-				$("#list-" + list + "-table").append('<tr id="list-' + list + '-row-' + row + '">');
-					
-				$("#list-" + list + "-row-" + row).append('<td class="row-drag-handler">');
-				$("#list-" + list + "-row-" + row).append('<td id="list-' + list + '-row-' + row + '-task">');
-
-				$("#list-" + list + "-row-" + row + " td.row-drag-handler").append('<div class="row-drag-handler-img grab">');
-				$("#row-drag-handler-src svg").clone().appendTo("#list-" + list + "-row-" + row + " .row-drag-handler-img");
-
-				$("#list-" + list + "-row-" + row + "-task").append('<input class="text" type="text" placeholder="Task ' + row + '" />');
-				$("#list-" + list + "-row-" + row + "-task").append('<span class="hidden" onclick="hideSpan(0, ' + row + ')">');
-
-				$("#list-" + list + "-row-" + row).append('<td class="check">');
-				$("#list-" + list + "-row-" + row).append('<td class="trash">');
-
-				$("#list-" + list + "-row-" + row + " td.check").append('<input type="checkbox" onclick="updateProgressBar(\'#list-0\')" />');
-				$("#list-" + list + "-row-" + row + " td.trash").append('<div class="trash-img" onclick="deleteRow(' + list + ', ' + row + ')">');
-
-				$("#trash-src svg").clone().appendTo("#list-" + list + "-row-" + row + " .trash-img");
-
-				/* Adding a listeniner for the enter key */
-				addKeyListener(list, row);
-			}
-			
-			function addRow(list){
-				let counter = $("#list-" + list + " list-info counter"),
-					totalRows = $("#list-" + list + " list-info total-rows"),
-					newRow = counter.html();
-				
-				createRow(list, newRow);
-				addKeyListener(0, newRow);
-				
-				// element.html() returns a string. Multiplying by one to convert string to an arithmetic-ready number.
-				counter.html(newRow * 1 + 1);
-				totalRows.html(totalRows.html() * 1 + 1);
-				
-				updateProgressBar("#list-" + list);
-				setHeight(list);
-				
-				$("#list-" + list + "-table tr").removeClass("even-row");
-				$("#list-" + list + "-table tr:even").addClass("even-row");
-				
-				bindTableDnD(list);
-			}
-			
-			function bindTableDnD(list){
-				$("#list-" + list + "-table").tableDnD({
-					onDragClass: "picked-up",
-					onDrop: function(){
-						$("#list-" + list + "-table tr").removeClass("even-row");
-						$("#list-" + list + "-table tr:even").addClass("even-row");
-					},
-					dragHandle: ".row-drag-handler"
-				});
-			}
-			
-			function setHeight(list, oldHeight){
-				let newHeight = $("#list-" + list + "-header").height() + $("#list-" + list + "-table").height() + $("#list-" + list + "-footer").height(),
-					numRows = $("#list-" + list + " list-info total-rows").html() * 1;
-				
-				if(numRows <= 6){
-					$("#list-" + list).css("min-height", newHeight + "px");
-				}/* else if($("#list-" + list + "-header")){
-					
-				}*/
-			}
-			
-			function deleteRow(list, row){
-				let totalRows = $("#list-" + list + " list-info total-rows");
-				
-				$("#list-" + list + "-row-" + row).remove();
-				
-				$("#list-" + list + "-table tr").removeClass("even-row");
-				$("#list-" + list + "-table tr:even").addClass("even-row");
-				
-				updateProgressBar("#list-" + list);
-				
-				// element.html() returns a string. Multiplying by one to convert string to an arithmetic-ready number.
-				totalRows.html(totalRows.html() * 1 - 1)
-			}
-			
 			$(document).ready(function(){
 				// Initialise the list
 				createList(save);
 			});
 		</script>
-		<div class="container">
-			<span id="version-info">v0.1.4_alpha &mdash; D-Doc, 2020</span>
+    </head>
+	<body>
+		<image-src id="header-drag-handler-src">
+			<svg viewBox="0 0 90 25"><g fill="none" stroke="#888" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"><path d="M2.5 2.5h85M2.5 12.5h85M2.5 22.5h85"/></g></svg>
+		</image-src>
+		<image-src id="X-src">
+			<svg viewBox="0 0 16 16"><g stroke-linecap="round" stroke-linejoin="round"><path fill="#cd0000" stroke="#900" d="M.5.5h15v15H.5z"/><path fill="none" stroke="gray" stroke-width="2" d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></g></svg>
+		</image-src>
+		<image-src id="row-drag-handler-src">
+			<svg viewBox="0 0 35 35"><path fill="none" stroke="#888" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M7.5 7.5h20m-20 10h20m-20 10h20"/></svg>
+		</image-src>
+		<image-src id="trash-src">
+			<svg viewBox="0 0 50 50"><path fill="none" stroke="red" stroke-linecap="square" stroke-linejoin="round" stroke-width="2" d="M15 14l2 25h16l2-25"/><path fill="none" stroke="red" stroke-width="2" d="M21 18v16M25 18l.0139 16M29 18v16M12 13h26"/><path fill="none" stroke="red" stroke-linejoin="round" stroke-width="2" d="M21 12V9h8v3"/><path d="M21 8a1.0001 1.0001 0 00-1 1v3h2v-2h6v2h2V9a1.0001 1.0001 0 00-1-1h-8z"  fill="red" color="#000" overflow="visible"/><path d="M22 10v1c0-.558324.441676-1 1-1h4c.558324 0 1 .441676 1 1v-1"  fill="red" color="#000" overflow="visible"/></svg>
+			<!-- This graphic is a recoloured and compressed copy of [[File:Иконка мусорки.svg]] by Alexander Madyankin -->
+			<!-- This graphic was made available using the MIT licence -->
+			<!-- Copyright © 2014 Alexander Madyankin, Roman Shamin -->
+			<!-- Original file and full licence located at https://commons.wikimedia.org/wiki/File:%D0%98%D0%BA%D0%BE%D0%BD%D0%BA%D0%B0_%D0%BC%D1%83%D1%81%D0%BE%D1%80%D0%BA%D0%B8.svg -->
+		</image-src>
+		<image-src id="plus-src">
+			<svg viewBox="0 0 20 20"><g fill="none" stroke-width="5"><path d="M10 0v20M0 10h20"/></g></svg>
+		</image-src>
+		<div id="container">
+			<span id="version-info">v0.1.5_alpha &mdash; D-Doc, 2020</span>
 			<div id="header">
 				<div class="social">
 					<a href="https://github.com/DiriectorDoc/Checklist-Maker"><svg viewBox="0 0 16 16" id="github"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg></a>
@@ -310,8 +87,11 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 					Checklist
 				</h1>
 			</div>
-			<div class="rename-later">
-			</div><!-- End of .rename-later -->
-		</div><!-- end of .container -->
+			<div id="board">
+			</div><!-- End of #board -->
+			<info-data>
+				<list-counter>0</list-counter>
+			</info-data>
+		</div><!-- end of #container -->
 	</body>
 </html>
