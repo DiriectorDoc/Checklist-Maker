@@ -1,75 +1,96 @@
-/* This function creates the list in its entirty */
-function createList(save){
-	let list = save.lists[0];
+/* This function creates the board in its entirty */
+function createBoard(save){
+	if(save.version >= 0.0106){
+		$("#title").html(save.title);
+		$("head title").html(save.title);
+	}
+	for(var i in save.lists){
+		addList(save.lists[i])
+		
+	}
+}
 
-	$("#board").append('<div id="list-0" class="list" style="top: '+list.top+'; left: '+list.left+'; width: '+list.width+'; height: '+list.height+';">');
+function addList(list){
+	let counter = $("#container info-data list-counter"),
+		i = counter.html() * 1;
+	if(!list){
+		list = defaultBoard.lists[0];
+	}
+	
+	let id = "#list-" + i;
+	
+	counter.html(i + 1);
 
-	$("#list-0").append('<div id="list-0-header" class="list-header">');
-	$("#list-0").append('<table id="list-0-table" class="list-content">');
-	$("#list-0").append('<div id="list-0-footer" class="list-footer">');
-	$("#list-0").append('<info-data>');
+	$("#board").append('<div id="list-' + i + '" class="list" style="top: '+list.top+'; left: '+list.left+'; width: '+list.width+'; height: '+list.height+';">');
 
-	$("#list-0-header").append('<table>');
-	$("#list-0-header table").append('<tr>');
+	$(id).append('<div id="list-' + i + '-header" class="list-header">');
+	$(id).append('<table id="list-' + i + '-table" class="list-content">');
+	$(id).append('<div id="list-' + i + '-footer" class="list-footer">');
+	$(id).append('<info-data>');
 
-	$("#list-0-header table tr").append('<td class="title">');
-	$("#list-0-header table tr").append('<td class="header-drag-handler">');
-	$("#list-0-header table tr").append('<td id="list-0-X" class="X">');
+	$(id + "-header").append('<table>');
+	$(id + "-header table").append('<tr>');
 
-	$("#list-0-header table tr td.title").html(list.title);
-	$("#list-0-header table tr td.header-drag-handler").append('<div id="list-0-header-drag-handler-img" class="header-drag-handler-img grab">');
+	$(id + "-header table tr").append('<td id="list-' + i + '-name" class="name">');
+	$(id + "-header table tr").append('<td class="header-drag-handler">');
+	$(id + "-header table tr").append('<td id="list-' + i + '-X" class="X">');
 
-	$("#header-drag-handler-src svg").clone().appendTo("#list-0-header-drag-handler-img");
-	$("#X-src svg").clone().appendTo("#list-0-X");
+	$(id + "-header table tr td.name").html(list.name);
+	$(id + "-header table tr td.header-drag-handler").append('<div id="list-' + i + '-header-drag-handler-img" class="header-drag-handler-img grab">');
 
-	for(var i = 0; i < list.items.length; i++){
-		createRow(0, i);
+	$("#header-drag-handler-src svg").clone().appendTo(id + "-header-drag-handler-img");
+	$("#X-src svg").clone().appendTo(id + "-X");
 
-		if(list.items[i].value){
-			$("#list-0-row-" + i + "-task span").html(list.items[i].value).addClass("task").removeClass("hidden");
-			$("#list-0-row-" + i + "-task input").val(list.items[i].value).addClass("hidden");
+	for(var j = 0; j < list.items.length; j++){
+		createRow(i, j);
+
+		if(list.items[j].value){
+			$(id + "-row-" + j + "-task span").html(list.items[j].value).addClass("task").removeClass("hidden");
+			$(id + "-row-" + j + "-task input").val(list.items[j].value).addClass("hidden");
 		} else {
-			hideSpan(0, i);
+			hideSpan(i, j);
 		}
 
-		$("#list-0-row-" + i + " td.check input").attr("checked", list.items[i].checked);
+		$(id + "-row-" + j + " td.check input").attr("checked", list.items[j].checked);
 	}
 
-	$("#list-0-footer").append('<div class="list-footer-left">');
-	$("#list-0-footer").append('<div class="progress-bar-shell">');
+	$(id + "-footer").append('<div class="list-footer-left">');
+	$(id + "-footer").append('<div class="progress-bar-shell">');
 
-	$("#list-0-footer .list-footer-left").append('<div class="plus-img" onclick="addRow(0)">');
-	$("#list-0-footer .progress-bar-shell").append('<div id="list-0-progress-bar" class="inner" />');
+	$(id + "-footer .list-footer-left").append('<div class="plus-img" onclick="addRow(' + i + ')">');
+	$(id + "-footer .progress-bar-shell").append('<div id="list-' + i + '-progress-bar" class="inner" />');
 
-	$("#plus-src svg").clone().appendTo("#list-0-footer .plus-img");
+	$("#plus-src svg").clone().appendTo(id + "-footer .plus-img");
 
 	/* Technical variables, reset upon refresh */
-	$("#list-0 info-data").append('<counter>');
-	$("#list-0 info-data").append('<total-rows>');
-	$("#list-0 info-data").append('<content-height>');
+	$(id + " info-data").append('<counter>');
+	$(id + " info-data").append('<total-rows>');
+	$(id + " info-data").append('<content-height>');
 
-	$("#list-0 counter").html(list.items.length);
-	$("#list-0 total-rows").html(list.items.length);
-	$("#list-0 content-height").html(0);
+	$(id + " counter").html(list.items.length);
+	$(id + " total-rows").html(list.items.length);
+	$(id + " content-height").html(0);
 
 	/* Adding css to various elements */
-	updateProgressBar(0);
-	setHeight(0);
-	$("#list-0-table tbody tr:even").addClass("even-row");
+	updateProgressBar(i);
+	setHeight(i);
+	$(id + "-table tbody tr:even").addClass("even-row");
 
 	/* Listener for when the list is resized */
-	new ResizeSensor($("#list-0")[0], function() {
-		for(var i = 0; i < $("#list-0 span").length; i++){
-			let span = $($("#list-0 span")[i]);
+	new ResizeSensor($(id)[0], function() {
+		for(var i = 0; i < $(id + " span").length; i++){
+			let span = $($(id + " span")[i]);
 			span.width(span.parent().width() * .9);
 		}
 	});
 
-	bindTableDnD(0);
-	dragElement($("#list-0")[0]);
-	
-	let counter = $("#container info-data list-counter")
-	counter.html(counter.html() * 1 + 1);
+	/* Listener for when the X is clicked */
+	$(id + " .X svg").click(function(){
+		$("#" + $(this).parent()[0].id.slice(0, -2)).remove();
+	});
+
+	bindTableDnD(i);
+	dragElement($(id)[0]);
 }
 
 function dragElement(elmnt) {
@@ -154,12 +175,12 @@ function createRow(list, row){
 	$("#row-drag-handler-src svg").clone().appendTo("#list-" + list + "-row-" + row + " .row-drag-handler-img");
 
 	$("#list-" + list + "-row-" + row + "-task").append('<input class="text" type="text" placeholder="Task ' + row + '" />');
-	$("#list-" + list + "-row-" + row + "-task").append('<span class="hidden" onclick="hideSpan(0, ' + row + ')">');
+	$("#list-" + list + "-row-" + row + "-task").append('<span class="hidden" onclick="hideSpan(' + list + ', ' + row + ')">');
 
 	$("#list-" + list + "-row-" + row).append('<td class="check">');
 	$("#list-" + list + "-row-" + row).append('<td class="trash">');
 
-	$("#list-" + list + "-row-" + row + " td.check").append('<input type="checkbox" onclick="updateProgressBar(0)" />');
+	$("#list-" + list + "-row-" + row + " td.check").append('<input type="checkbox" onclick="updateProgressBar(' + list + ')" />');
 	$("#list-" + list + "-row-" + row + " td.trash").append('<div class="trash-img" onclick="deleteRow(' + list + ', ' + row + ')">');
 
 	$("#trash-src svg").clone().appendTo("#list-" + list + "-row-" + row + " .trash-img");
@@ -176,7 +197,7 @@ function addRow(list){
 		newRow = counter.html();
 
 	createRow(list, newRow);
-	addKeyListener(0, newRow);
+	addKeyListener(list, newRow);
 
 	// element.html() returns a string. Multiplying by one to convert string to an arithmetic-ready number.
 	counter.html(newRow * 1 + 1);

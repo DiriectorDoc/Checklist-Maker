@@ -15,11 +15,15 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 		<!--script type="text/javascript" src="css-element-queries-by-marcj/ElementQueries.js"></script-->
 		<script type="text/javascript" src="css-element-queries-by-marcj/ResizeSensor.js"></script>
         <script type="text/javascript" src="main.js"></script>
+        <script type="text/javascript" src="exportList.js"></script>
+        <script type="text/javascript" src="importList.js"></script>
 		<script type="text/javascript">
-			let save = {
+			let defaultBoard = {
+				version: 0.0106,
+				title: "Checklist",
 				lists: [
 					{
-						title: "List 1",
+						name: "List 1",
 						items: [
 							{
 								value: "Task 0",
@@ -52,8 +56,23 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 			}
 			
 			$(document).ready(function(){
+				// Add keylistener to title input
+				$("#title-text").on("keypress", function(e){
+					let h1 = $("#title"),
+						input = $("#title-text"),
+						field = $.trim(input.val());
+					// if the enter key is pressed and the text box isn't blank
+					if (e.keyCode == 13 && field) {
+						h1.html(field);
+						$("head title").html(field);
+						h1.removeClass("hidden");
+						input.addClass("hidden");
+						return false; // this part may or may not be important
+					}
+				});
+				
 				// Initialise the list
-				createList(save);
+				createBoard(defaultBoard);
 			});
 		</script>
     </head>
@@ -78,20 +97,32 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 			<svg viewBox="0 0 20 20"><g fill="none" stroke-width="5"><path d="M10 0v20M0 10h20"/></g></svg>
 		</image-src>
 		<div id="container">
-			<span id="version-info">v0.1.5_alpha &mdash; D-Doc, 2020</span>
+			<span id="version-info">v0.1.6_alpha &mdash; D-Doc, 2020</span>
+			<span id="import-export">
+				<span class="file-img" tooltip="Add a new list" onclick="addList()">
+					<svg viewBox="0 0 20 20"><g stroke-width="5"><path d="M10 0v20M0 10h20"/></g></svg>
+				</span>
+				<span class="file-img" tooltip="Import board" onclick="importList()">
+					<svg viewBox="0 0 71 90"><path d="M48 4v19h19z" stroke-width="8" stroke-linejoin="round"/><path d="M4 4v82h63V23L48 4z" stroke-width="8" stroke-linejoin="round"/><path d="M23 45l13-12 12 12"stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M36 33v38" stroke-width="8" stroke-linecap="round"/></svg>
+				</span>
+				<span class="file-img" tooltip="Export board" onclick="exportList()">
+					<svg viewBox="0 0 97 90"><path d="M48 4v19h19z" stroke-width="8" stroke-linejoin="round"/><path d="M4 4v82h63V23L48 4z" stroke-width="8" stroke-linejoin="round"/><path d="M80 39l13 13-13 12" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M92 52H54" stroke-width="8" stroke-linecap="round"/></svg>
+				</span>
+			</span>
 			<div id="header">
 				<div class="social">
 					<a href="https://github.com/DiriectorDoc/Checklist-Maker"><svg viewBox="0 0 16 16" id="github"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg></a>
 				</div>
-				<h1 id="ListName">
+				<h1 id="title" onclick='$("#title").addClass("hidden"); $("#title-text").removeClass("hidden")'>
 					Checklist
 				</h1>
+				<input type="text" id="title-text" class="hidden" placeholder="title" />
 			</div>
 			<div id="board">
-			</div><!-- End of #board -->
+			</div>
 			<info-data>
 				<list-counter>0</list-counter>
 			</info-data>
-		</div><!-- end of #container -->
+		</div>
 	</body>
 </html>
