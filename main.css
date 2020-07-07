@@ -80,8 +80,8 @@ tr {
 	min-width: -webkit-fit-content;
 	min-width: fit-content;
 	overflow: hidden;
-	overflow-y: auto;
 	-ms-overflow-y: auto;
+	overflow-y: auto;
 	position: absolute;
 	resize: both;
 	width: 350px;
@@ -96,6 +96,13 @@ tr {
 }
 .list-header {
 	background: #bbf;
+}
+.name {
+	float: left;
+	margin-left: .33em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 .picked-up {
 	background: #bbb;
@@ -150,13 +157,6 @@ tr {
 .text {
 	width: 90%;
 }
-.title {
-	float: left;
-	margin-left: .33em;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
 .trash-img svg {
 	display: block;
 	max-height: 1.4em;
@@ -176,6 +176,12 @@ tr {
 .X svg {
 	height: 1em;
 }
+.X:hover path {
+	stroke: black;
+}
+.X:hover path[fill="#cd0000"] {
+	fill: red;
+}
 .X {
 	max-width: -webkit-fit-content;
 	min-width: -webkit-fit-content;
@@ -184,17 +190,81 @@ tr {
 	padding-right: .33em;
 	text-align: right;
 }
-#header h1 {
-	margin-bottom: 5px;
+.X:hover {
+	cursor: pointer;
 }
 #header {
 	background: #55a;
 	margin: 0;
 	padding: 20px 1.5em 1px 1.5em;
 }
+#import-export .file-img {
+	cursor: pointer;
+}
+#import-export .file-img:hover svg {
+	stroke: #000;
+}
+#import-export svg {
+	fill: none;
+	height: 2em;
+	padding: 0 0.33em;
+	stroke: #333;
+}
+#import-export {
+	display: block;
+	position: absolute;
+	right: 3px;
+	top: calc(2.67em + 5px);
+}
+#title {
+	margin: 0.67em 0 5px 0;
+}
+#title-text {
+	font-size: 2em;
+	margin: calc(0.67em - 2px) 0 3px 0;
+	padding: 0;
+}
 #version-info {
 	bottom: 3px;
 	display: block;
 	left: 3px;
 	position: absolute;
+}
+[tooltip]:after {
+	border-color: transparent;
+	border-left-color: #000;
+	border-style: solid;
+	border-width: 6px 0 6px 6px;
+	content: none;
+	display: none;
+	height: 0;
+	margin-top: -6px;
+	position: absolute;
+	right: 100%;
+	top: 50%;
+	width: 0;
+}
+[tooltip]:before {
+	background: #000;
+	border-radius: 4px;
+	color: #fff;
+	content: attr(tooltip);
+	display: none;
+	font-size: 14px;
+	line-height: 1.4;
+	margin-right: 6px;
+	min-width: 100px;
+	padding: 4px 8px;
+	position: absolute;
+	right: 100%;
+	text-align: center;
+	top: 50%;
+	-webkit-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+[tooltip]:hover:after, [tooltip]:hover:before {
+	display: block;
+	z-index: 50;
 }
