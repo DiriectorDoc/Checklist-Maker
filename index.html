@@ -12,14 +12,13 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 		<link rel="icon" type="image/png" href="icon/icon.png">
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/TableDnD/0.9.1/jquery.tablednd.js" integrity="sha256-d3rtug+Hg1GZPB7Y/yTcRixO/wlI78+2m08tosoRn7A=" crossorigin="anonymous"></script>
-		<!--script type="text/javascript" src="css-element-queries-by-marcj/ElementQueries.js"></script-->
 		<script type="text/javascript" src="css-element-queries-by-marcj/ResizeSensor.js"></script>
         <script type="text/javascript" src="main.js"></script>
         <script type="text/javascript" src="exportList.js"></script>
         <script type="text/javascript" src="importList.js"></script>
 		<script type="text/javascript">
 			let defaultBoard = {
-				version: 0.0106,
+				version: 0.0107,
 				title: "Checklist",
 				lists: [
 					{
@@ -52,10 +51,24 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 						width: "350px",
 						height: "223px"
 					}
+				],
+				notes: [
+					{
+						name: "Note 1",
+						text: "Note",
+						top: "100px",
+						left: "400px",
+						width: "350px",
+						height: "223px"
+					}
 				]
 			}
 			
 			$(document).ready(function(){
+				// Add refresh warning
+				window.onbeforeunload = function(){
+					return "Data will be lost if you exit or refresh.";
+				};
 				// Add keylistener to title input
 				$("#title-text").on("keypress", function(e){
 					let h1 = $("#title"),
@@ -97,10 +110,13 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 			<svg viewBox="0 0 20 20"><g fill="none" stroke-width="5"><path d="M10 0v20M0 10h20"/></g></svg>
 		</image-src>
 		<div id="container">
-			<span id="version-info">v0.1.6_alpha &mdash; D-Doc, 2020</span>
-			<span id="import-export">
+			<span id="version-info">v0.1.7_alpha &mdash; D-Doc, 2020</span>
+			<span id="toolbar">
 				<span class="file-img" tooltip="Add a new list" onclick="addList()">
-					<svg viewBox="0 0 20 20"><g stroke-width="5"><path d="M10 0v20M0 10h20"/></g></svg>
+					<svg viewBox="0 0 47.8 56.9"><path d="M37 2v9h9z" stroke-width="4" stroke-linejoin="round"/><path d="M18 2v37h28V11l-9-9z" stroke-width="4" stroke-linejoin="round"/><path d="M31 33l-6-7M41 16L31 33" stroke-width="4" stroke-linecap="round"/><path d="M10 37v20M0 47h20" stroke-width="5"/></svg>
+				</span>
+				<span class="file-img" tooltip="Add a new note" onclick="//addList()">
+					<svg viewBox="0 0 47.8 56.9"><path d="M37 2v9h9z" stroke-width="4" stroke-linejoin="round"/><path d="M18 2v37h28V11l-9-9z" stroke-width="4" stroke-linejoin="round"/><path d="M40 17H24M40 24H24M40 30H24" stroke-width="4" stroke-linecap="round"/><path d="M10 37v20M0 47h20" stroke-width="5"/></svg>
 				</span>
 				<span class="file-img" tooltip="Import board" onclick="importList()">
 					<svg viewBox="0 0 71 90"><path d="M48 4v19h19z" stroke-width="8" stroke-linejoin="round"/><path d="M4 4v82h63V23L48 4z" stroke-width="8" stroke-linejoin="round"/><path d="M23 45l13-12 12 12"stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M36 33v38" stroke-width="8" stroke-linecap="round"/></svg>
