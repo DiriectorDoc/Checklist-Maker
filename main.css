@@ -26,15 +26,20 @@ td {
 	min-width: 1.4em;
 	padding: 3pt 0;
 }
+textarea {
+	font-size: 1em;
+	height: 100%;
+	-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+	box-sizing: border-box;
+	resize: none;
+	width: 100%;
+}
 tr {
 	padding: 0;
 }
 .even-row {
 	background: #eee;
-}
-.list-footer-left {
-	padding-left: 1em;
-	width:40%
 }
 .grab {
 	cursor: move;
@@ -67,10 +72,10 @@ tr {
 .inner {
 	height: 100%;
 }
-.list table {
+.list table, .note table {
 	width: 100%;
 }
-.list {
+.list, .note {
 	background: #DADAFF;
 	border: 2px solid;
 	display: inline-block;
@@ -94,7 +99,11 @@ tr {
 	min-height: 1.4em;
 	width: 100%;
 }
-.list-header {
+.list-footer-left {
+	padding-left: 1em;
+	width:40%
+}
+.list-header, .note-header {
 	background: #bbf;
 }
 .name {
@@ -104,6 +113,9 @@ tr {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
+.note-content {
+	height: calc(100% - 1.8em);
+}
 .picked-up {
 	background: #bbb;
 }
@@ -111,13 +123,13 @@ tr {
 	height: 1.4em;
 	stroke: #aaa;
 }
-.plus-img:hover svg {
-	stroke: #000;
-}
 .plus-img {
 	max-width: -webkit-fit-content;
 	max-width: fit-content;
 	padding-top: 1.2pt;
+}
+.plus-img:hover svg {
+	stroke: #000;
 }
 .plus-img:hover {
 	cursor: pointer;
@@ -161,26 +173,20 @@ tr {
 	display: block;
 	max-height: 1.4em;
 }
+.trash-img {
+	width: 100%;
+}
 .trash-img:hover svg path[fill="none"] {
 	stroke: #000;
 }
 .trash-img:hover svg path[fill="red"] {
 	fill: #000;
 }
-.trash-img {
-	width: 100%;
-}
 .trash-img:hover {
 	cursor: pointer;
 }
 .X svg {
 	height: 1em;
-}
-.X:hover path {
-	stroke: black;
-}
-.X:hover path[fill="#cd0000"] {
-	fill: red;
 }
 .X {
 	max-width: -webkit-fit-content;
@@ -190,6 +196,12 @@ tr {
 	padding-right: .33em;
 	text-align: right;
 }
+.X:hover path {
+	stroke: black;
+}
+.X:hover path[fill="#cd0000"] {
+	fill: red;
+}
 .X:hover {
 	cursor: pointer;
 }
@@ -198,19 +210,19 @@ tr {
 	margin: 0;
 	padding: 20px 1.5em 1px 1.5em;
 }
-#import-export .file-img {
+#toolbar .file-img {
 	cursor: pointer;
 }
-#import-export .file-img:hover svg {
+#toolbar .file-img:hover svg {
 	stroke: #000;
 }
-#import-export svg {
+#toolbar svg {
 	fill: none;
 	height: 2em;
 	padding: 0 0.33em;
 	stroke: #333;
 }
-#import-export {
+#toolbar {
 	display: block;
 	position: absolute;
 	right: 3px;

@@ -8,6 +8,10 @@ function createBoard(save){
 		addList(save.lists[i])
 		
 	}
+	for(var i in save.notes){
+		addNote(save.notes[i])
+		
+	}
 }
 
 function addList(list){
@@ -73,7 +77,7 @@ function addList(list){
 
 	/* Adding css to various elements */
 	updateProgressBar(i);
-	setHeight(i);
+	setListHeight(i);
 	$(id + "-table tbody tr:even").addClass("even-row");
 
 	/* Listener for when the list is resized */
@@ -90,6 +94,43 @@ function addList(list){
 	});
 
 	bindTableDnD(i);
+	dragElement($(id)[0]);
+}
+
+function addNote(note){
+	let counter = $("#container info-data list-counter"),
+		i = counter.html() * 1;
+	if(!note){
+		note = defaultBoard.lists[0];
+	}
+	
+	let id = "#note-" + i;
+
+	$("#board").append('<div id="note-' + i + '" class="note" style="top: '+note.top+'; left: '+note.left+'; width: '+note.width+'; height: '+note.height+';">');
+
+	$(id).append('<div id="note-' + i + '-header" class="note-header">');
+	$(id).append('<div id="note-' + i + '-content" class="note-content">');
+
+	$(id + "-header").append('<table>');
+	$(id + "-header table").append('<tr>');
+
+	$(id + "-header table tr").append('<td id="note-' + i + '-name" class="name">');
+	$(id + "-header table tr").append('<td class="header-drag-handler">');
+	$(id + "-header table tr").append('<td id="note-' + i + '-X" class="X">');
+
+	$(id + "-header table tr td.name").html(note.name);
+	$(id + "-header table tr td.header-drag-handler").append('<div id="note-' + i + '-header-drag-handler-img" class="header-drag-handler-img grab">');
+
+	$(id + "-content").append('<textarea></textarea>');
+
+	$("#header-drag-handler-src svg").clone().appendTo(id + "-header-drag-handler-img");
+	$("#X-src svg").clone().appendTo(id + "-X");
+
+	/* Listener for when the X is clicked */
+	$(id + " .X svg").click(function(){
+		$("#" + $(this).parent()[0].id.slice(0, -2)).remove();
+	});
+
 	dragElement($(id)[0]);
 }
 
@@ -204,7 +245,7 @@ function addRow(list){
 	totalRows.html(totalRows.html() * 1 + 1);
 
 	updateProgressBar(list);
-	setHeight(list, oldHeight);
+	setListHeight(list, oldHeight);
 
 	$("#list-" + list + "-table tr").removeClass("even-row");
 	$("#list-" + list + "-table tr:even").addClass("even-row");
@@ -231,7 +272,7 @@ function bindTableDnD(list){
 **	!!!  DO NOT TOUCH  !!!
 **	Yes, this function is quite messy, but it works.
 */
-function setHeight(list, oldHeight){
+function setListHeight(list, oldHeight){
 	let newHeight = $("#list-" + list + "-header").height() + $("#list-" + list + "-table").height() + $("#list-" + list + "-footer").height(),
 		numRows = $("#list-" + list + " info-data total-rows").html() * 1,
 		contentHeight = $("#list-" + list + " info-data content-height").html() * 1,
@@ -266,8 +307,13 @@ function deleteRow(list, row){
 	$("#list-" + list + "-table tr:even").addClass("even-row");
 
 	updateProgressBar(list);
-	setHeight(list, oldHeight);
+	setListHeight(list, oldHeight);
 
 	// element.html() returns a string. Multiplying by one to convert string to an arithmetic-ready number.
 	totalRows.html(totalRows.html() * 1 - 1)
+}
+
+function setTextareaHeight(note){
+	let area = $("#note-" + note + " textarea");
+	area.height(area.parent().height());
 }
