@@ -6,11 +6,11 @@ function createBoard(save){
 	}
 	for(var i in save.lists){
 		addList(save.lists[i])
-		
 	}
-	for(var i in save.notes){
-		addNote(save.notes[i])
-		
+	if(save.version >= 0.0107){
+		for(var i in save.notes){
+			addNote(save.notes[i])
+		}
 	}
 }
 
@@ -20,9 +20,9 @@ function addList(list){
 	if(!list){
 		list = defaultBoard.lists[0];
 	}
-	
+
 	let id = "#list-" + i;
-	
+
 	counter.html(i + 1);
 
 	$("#board").append('<div id="list-' + i + '" class="list" style="top: '+list.top+'; left: '+list.left+'; width: '+list.width+'; height: '+list.height+';">');
@@ -103,7 +103,7 @@ function addNote(note){
 	if(!note){
 		note = defaultBoard.lists[0];
 	}
-	
+
 	let id = "#note-" + i;
 
 	$("#board").append('<div id="note-' + i + '" class="note" style="top: '+note.top+'; left: '+note.left+'; width: '+note.width+'; height: '+note.height+';">');
@@ -125,6 +125,8 @@ function addNote(note){
 
 	$("#header-drag-handler-src svg").clone().appendTo(id + "-header-drag-handler-img");
 	$("#X-src svg").clone().appendTo(id + "-X");
+
+	$(id + " textarea").val(note.value);
 
 	/* Listener for when the X is clicked */
 	$(id + " .X svg").click(function(){
@@ -232,7 +234,7 @@ function createRow(list, row){
 
 function addRow(list){
 	let oldHeight = $("#list-" + list).height();
-	
+
 	let counter = $("#list-" + list + " info-data counter"),
 		totalRows = $("#list-" + list + " info-data total-rows"),
 		newRow = counter.html();
@@ -276,11 +278,11 @@ function setListHeight(list, oldHeight){
 	let newHeight = $("#list-" + list + "-header").height() + $("#list-" + list + "-table").height() + $("#list-" + list + "-footer").height(),
 		numRows = $("#list-" + list + " info-data total-rows").html() * 1,
 		contentHeight = $("#list-" + list + " info-data content-height").html() * 1,
-		
+
 		listE = $("#list-" + list);
-	
+
 	$("#list-" + list + " info-data content-height").html(newHeight);
-	
+
 	if(contentHeight === 0){
 		listE.css("min-height", newHeight + "px");
 	}
@@ -298,7 +300,7 @@ function setListHeight(list, oldHeight){
 
 function deleteRow(list, row){
 	let oldHeight = $("#list-" + list).height();
-	
+
 	let totalRows = $("#list-" + list + " info-data total-rows");
 
 	$("#list-" + list + "-row-" + row).remove();
