@@ -15,14 +15,14 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 		<script type="text/javascript" src="css-element-queries-by-marcj/ResizeSensor.js"></script>
         <script type="text/javascript" src="main.js"></script>
         <script type="text/javascript" src="exportBoard.js"></script>
-        <script type="text/javascript" src="importBoard.js"></script>
+		<script type="text/javascript" src="importBoard.js"></script>
 		<script type="text/javascript">
 			let defaultBoard = {
-				version: 0.0107,
+				version: 0.0108,
 				title: "Checklist",
 				lists: [
 					{
-						name: "List 1",
+						name: "List 0",
 						items: [
 							{
 								value: "Task 0",
@@ -69,6 +69,16 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 				window.onbeforeunload = function(){
 					return "Data will be lost if you exit or refresh.";
 				};
+				
+				$(window).resize(function(){
+					$(".list,.note").toArray().forEach(function(e){
+						$(e).css({
+							"left": "min(" + e.style.left + ", calc(100vw - 4px - " + $(e).width() + "px))",
+							"top": "min(" + e.style.top + ", calc(100vh - 4px - " + $(e).height() + "px))"
+						});
+					});
+				});
+				
 				// Add keylistener to title input
 				$("#title-text").on("keypress", function(e){
 					let h1 = $("#title"),
@@ -110,12 +120,12 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 			<svg viewBox="0 0 20 20"><g fill="none" stroke-width="5"><path d="M10 0v20M0 10h20"/></g></svg>
 		</image-src>
 		<div id="container">
-			<span id="version-info">v0.1.7-1_alpha &mdash; D-Doc, 2020</span>
+			<span id="version-info">v0.1.8_alpha &mdash; D-Doc, 2020</span>
 			<span id="toolbar">
 				<span class="file-img" tooltip="Add a new list" onclick="addList()">
 					<svg viewBox="0 0 47.8 56.9"><path d="M37 2v9h9z" stroke-width="4" stroke-linejoin="round"/><path d="M18 2v37h28V11l-9-9z" stroke-width="4" stroke-linejoin="round"/><path d="M31 33l-6-7M41 16L31 33" stroke-width="4" stroke-linecap="round"/><path d="M10 37v20M0 47h20" stroke-width="5"/></svg>
 				</span>
-				<span class="file-img" tooltip="Add a new note" onclick="//addList()">
+				<span class="file-img" tooltip="Add a new note" onclick="addNote()">
 					<svg viewBox="0 0 47.8 56.9"><path d="M37 2v9h9z" stroke-width="4" stroke-linejoin="round"/><path d="M18 2v37h28V11l-9-9z" stroke-width="4" stroke-linejoin="round"/><path d="M40 17H24M40 24H24M40 30H24" stroke-width="4" stroke-linecap="round"/><path d="M10 37v20M0 47h20" stroke-width="5"/></svg>
 				</span>
 				<span class="file-img" tooltip="Import board" onclick="importBoard()">
@@ -134,11 +144,8 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 				</h1>
 				<input type="text" id="title-text" class="hidden" placeholder="title" />
 			</div>
-			<div id="board">
+			<div id="board" list-counter="0">
 			</div>
-			<info-data>
-				<list-counter>0</list-counter>
-			</info-data>
 		</div>
 	</body>
 </html>
