@@ -26,8 +26,8 @@
 			return;
 		} else {
 			board = {
-				version: 0.0107,
-				title: "Checklist",
+				version: 0.0108,
+				title: $.trim($("#title").html()),
 				lists: [],
 				notes: []
 			};
@@ -37,7 +37,7 @@
 				let n = (/list-(\d+)/g).exec(e.id)[1] * 1;
 
 				let newList = {
-					name: $("#list-" + n + "-name").html(),
+					name: $("#list-" + n + "-name span").html(),
 					items: [],
 					top: e.style.top,
 					left: e.style.left,

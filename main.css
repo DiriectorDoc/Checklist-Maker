@@ -5,7 +5,7 @@ body {
 	background: #555;
 	margin: 0;
 }
-image-src, info-data {
+image-src {
 	display: none;
 }
 svg {
@@ -106,9 +106,11 @@ tr {
 .list-header, .note-header {
 	background: #bbf;
 }
+.name input{
+	height: calc(1em - 4px)
+}
 .name {
-	float: left;
-	margin-left: .33em;
+	padding-left: .33em;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;

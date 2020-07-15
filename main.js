@@ -2,6 +2,7 @@
 function createBoard(save){
 	if(save.version >= 0.0106){
 		$("#title").html(save.title);
+		$("#title-text").val(save.title);
 		$("head title").html(save.title);
 	}
 	for(var i in save.lists){
@@ -15,22 +16,19 @@ function createBoard(save){
 }
 
 function addList(list){
-	let counter = $("#container info-data list-counter"),
-		i = counter.html() * 1;
+	let i = $("#board").attr("list-counter") * 1;
 	if(!list){
 		list = defaultBoard.lists[0];
 	}
+	$("#board").attr("list-counter", i + 1);
 
 	let id = "#list-" + i;
-
-	counter.html(i + 1);
 
 	$("#board").append('<div id="list-' + i + '" class="list" style="top: '+list.top+'; left: '+list.left+'; width: '+list.width+'; height: '+list.height+';">');
 
 	$(id).append('<div id="list-' + i + '-header" class="list-header">');
 	$(id).append('<table id="list-' + i + '-table" class="list-content">');
 	$(id).append('<div id="list-' + i + '-footer" class="list-footer">');
-	$(id).append('<info-data>');
 
 	$(id + "-header").append('<table>');
 	$(id + "-header table").append('<tr>');
@@ -39,10 +37,15 @@ function addList(list){
 	$(id + "-header table tr").append('<td class="header-drag-handler">');
 	$(id + "-header table tr").append('<td id="list-' + i + '-X" class="X">');
 
-	$(id + "-header table tr td.name").html(list.name);
+	$(id + "-header table tr td.name").append('<input class="text hidden" type="text" placeholder="List ' + i + '" />');
+	$(id + "-header table tr td.name").append('<span onclick="hideSpan(\'' + id + '-header table tr td.name\')">');
+	$(id + "-header table tr td.name span").html(list.name);
+	$(id + "-header table tr td.name input").val(list.name);
+	addKeyListener(id + "-header table tr td.name");
+	
 	$(id + "-header table tr td.header-drag-handler").append('<div id="list-' + i + '-header-drag-handler-img" class="header-drag-handler-img grab">');
-
 	$("#header-drag-handler-src svg").clone().appendTo(id + "-header-drag-handler-img");
+	
 	$("#X-src svg").clone().appendTo(id + "-X");
 
 	for(var j = 0; j < list.items.length; j++){
@@ -67,13 +70,9 @@ function addList(list){
 	$("#plus-src svg").clone().appendTo(id + "-footer .plus-img");
 
 	/* Technical variables, reset upon refresh */
-	$(id + " info-data").append('<counter>');
-	$(id + " info-data").append('<total-rows>');
-	$(id + " info-data").append('<content-height>');
-
-	$(id + " counter").html(list.items.length);
-	$(id + " total-rows").html(list.items.length);
-	$(id + " content-height").html(0);
+	$(id).attr("counter", list.items.length);
+	$(id).attr("total-rows", list.items.length);
+	$(id).attr("content-height", 0);
 
 	/* Adding css to various elements */
 	updateProgressBar(i);
@@ -98,11 +97,11 @@ function addList(list){
 }
 
 function addNote(note){
-	let counter = $("#container info-data list-counter"),
-		i = counter.html() * 1;
+	let i = $("#board").attr("list-counter") * 1;
 	if(!note){
-		note = defaultBoard.lists[0];
+		note = defaultBoard.notes[0];
 	}
+	$("#board").attr("list-counter", i + 1);
 
 	let id = "#note-" + i;
 
@@ -118,14 +117,18 @@ function addNote(note){
 	$(id + "-header table tr").append('<td class="header-drag-handler">');
 	$(id + "-header table tr").append('<td id="note-' + i + '-X" class="X">');
 
-	$(id + "-header table tr td.name").html(note.name);
+	$(id + "-header table tr td.name").append('<input class="text hidden" type="text" placeholder="Note ' + i + '" />');
+	$(id + "-header table tr td.name").append('<span onclick="hideSpan(\'' + id + '-header table tr td.name\')">');
+	$(id + "-header table tr td.name span").html(note.name);
+	$(id + "-header table tr td.name input").val(note.name);
+	addKeyListener(id + "-header table tr td.name");
+	
 	$(id + "-header table tr td.header-drag-handler").append('<div id="note-' + i + '-header-drag-handler-img" class="header-drag-handler-img grab">');
-
-	$(id + "-content").append('<textarea></textarea>');
-
 	$("#header-drag-handler-src svg").clone().appendTo(id + "-header-drag-handler-img");
+
 	$("#X-src svg").clone().appendTo(id + "-X");
 
+	$(id + "-content").append('<textarea></textarea>');
 	$(id + " textarea").val(note.value);
 
 	/* Listener for when the X is clicked */
@@ -171,24 +174,28 @@ function dragElement(elmnt) {
 
 			// newX + $(elmnt).width() is the co-ordinate of the rightmost edge (+4 for the border, 2px on each side)
 			if(newX + $(elmnt).width() + 4 < $(window).width() && newX > 0){
-				elmnt.style.left = newX + "px";
+				$(elmnt).css("left", "min(" + newX + "px , calc(100vw - 4px - " + $(elmnt).width() + "px))");
 			}
 			if(newY + $(elmnt).height() + 4 < $(window).height() && newY > $("#header").height() + 21){
-				elmnt.style.top = newY + "px";
+				$(elmnt).css("top", "min(" + newY + "px , calc(100vh - 5px - " + $(elmnt).height() + "px))");
 			}
 		};
 	}
 }
 
-function addKeyListener(list, row){
-	$("#list-" + list + "-row-" + row + "-task input").on("keypress", function(e){
-		let span = $("#list-" + list + "-row-" + row + "-task span"),
-			input = $("#list-" + list + "-row-" + row + "-task input"),
+function addKeyListener(list, row, taskClass){
+	let elem = $(typeof list === "string" ? list:("#list-" + list + "-row-" + row + "-task"));
+	elem.find("input").on("keypress", function(e){
+		let span = elem.find("span"),
+			input = elem.find("input"),
 			field = $.trim(input.val());
 		// if the enter key is pressed and the text box isn't blank
 		if (e.keyCode == 13 && field) {
 			span.html(field);
-			span.removeClass("hidden").addClass("task");
+			span.removeClass("hidden")
+			if(taskClass){
+				span.addClass("task");
+			}
 			input.addClass("hidden");
 			return false; // this part may or may not be important
 		}
@@ -196,9 +203,13 @@ function addKeyListener(list, row){
 }
 
 function hideSpan(list, row){
+	if(typeof list === "string"){
+		$(list + " span").addClass('hidden');
+		$(list + " input").removeClass('hidden');
+		return;
+	}
 	$("#list-" + list + "-row-" + row + "-task span").addClass('hidden').removeClass('task');
 	$("#list-" + list + "-row-" + row + "-task input").removeClass('hidden');
-	//return false;
 }
 
 function updateProgressBar(list){
@@ -229,22 +240,20 @@ function createRow(list, row){
 	$("#trash-src svg").clone().appendTo("#list-" + list + "-row-" + row + " .trash-img");
 
 	/* Adding a listeniner for the enter key */
-	addKeyListener(list, row);
+	addKeyListener(list, row, true);
 }
 
 function addRow(list){
 	let oldHeight = $("#list-" + list).height();
 
-	let counter = $("#list-" + list + " info-data counter"),
-		totalRows = $("#list-" + list + " info-data total-rows"),
-		newRow = counter.html();
+	let newRow = $("#list-" + list).attr("counter") * 1;
 
 	createRow(list, newRow);
-	addKeyListener(list, newRow);
+	addKeyListener(list, newRow, true);
 
 	// element.html() returns a string. Multiplying by one to convert string to an arithmetic-ready number.
-	counter.html(newRow * 1 + 1);
-	totalRows.html(totalRows.html() * 1 + 1);
+	$("#list-" + list).attr("counter", newRow + 1);
+	$("#list-" + list).attr("total-rows", $("#list-" + list).attr("total-rows") * 1 + 1);
 
 	updateProgressBar(list);
 	setListHeight(list, oldHeight);
@@ -276,12 +285,12 @@ function bindTableDnD(list){
 */
 function setListHeight(list, oldHeight){
 	let newHeight = $("#list-" + list + "-header").height() + $("#list-" + list + "-table").height() + $("#list-" + list + "-footer").height(),
-		numRows = $("#list-" + list + " info-data total-rows").html() * 1,
-		contentHeight = $("#list-" + list + " info-data content-height").html() * 1,
+		numRows = $("#list-" + list).attr("total-rows") * 1,
+		contentHeight = $("#list-" + list).attr("content-height") * 1,
 
 		listE = $("#list-" + list);
 
-	$("#list-" + list + " info-data content-height").html(newHeight);
+	$("#list-" + list).attr("content-height", newHeight);
 
 	if(contentHeight === 0){
 		listE.css("min-height", newHeight + "px");
@@ -290,7 +299,7 @@ function setListHeight(list, oldHeight){
 		newHeight += oldHeight - contentHeight
 		listE.css("height", newHeight + "px");
 		if(oldHeight == contentHeight){
-			$("#list-" + list + " info-data content-height").html(listE.height());
+			$("#list-" + list).attr("content-height", listE.height());
 		}
 	} else if(newHeight < oldHeight){
 		listE.css("height", newHeight + "px");
@@ -301,8 +310,6 @@ function setListHeight(list, oldHeight){
 function deleteRow(list, row){
 	let oldHeight = $("#list-" + list).height();
 
-	let totalRows = $("#list-" + list + " info-data total-rows");
-
 	$("#list-" + list + "-row-" + row).remove();
 
 	$("#list-" + list + "-table tr").removeClass("even-row");
@@ -312,7 +319,7 @@ function deleteRow(list, row){
 	setListHeight(list, oldHeight);
 
 	// element.html() returns a string. Multiplying by one to convert string to an arithmetic-ready number.
-	totalRows.html(totalRows.html() * 1 - 1)
+	$("#list-" + list).attr("total-rows", $("#list-" + list).attr("total-rows") * 1 + 1);
 }
 
 function setTextareaHeight(note){
