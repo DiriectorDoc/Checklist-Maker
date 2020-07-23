@@ -26,7 +26,7 @@
 			return;
 		} else {
 			board = {
-				version: 0.0108,
+				version: 0.02,
 				title: $.trim($("#title").html()),
 				lists: [],
 				notes: []

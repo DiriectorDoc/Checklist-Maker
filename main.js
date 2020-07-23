@@ -1,3 +1,54 @@
+const getID = (l,r) => "#list-" + l + (r || r === 0 ? "-row-" + r:""),
+	  defaultBoard = {
+		  version: 0.02,
+		  title: "Checklist",
+		  lists: [
+			  {
+				  name: "New List",
+				  items: [
+					  {
+						  value: "",
+						  checked: false
+					  },
+					  {
+						  value: "",
+						  checked: false
+					  },
+					  {
+						  value: "",
+						  checked: false
+					  },
+					  {
+						  value: "",
+						  checked: false
+					  },
+					  {
+						  value: "",
+						  checked: false
+					  }
+				  ],
+				  top: "100px",
+				  left: "15px",
+				  width: "350px",
+				  height: "223px"
+			  }
+		  ],
+		  notes: [
+			  {
+				  name: "New Note",
+				  value: "Edit me!",
+				  top: "100px",
+				  left: "400px",
+				  width: "350px",
+				  height: "223px"
+			  }
+		  ]
+	  }
+
+
+/*
+**	Major functions
+*/
 /* This function creates the board in its entirty */
 function createBoard(save){
 	if(save.version >= 0.0106){
@@ -22,28 +73,37 @@ function addList(list){
 	}
 	$("#board").attr("list-counter", i + 1);
 
-	let id = "#list-" + i;
+	let id = getID(i);
 
-	$("#board").append('<div id="list-' + i + '" class="list" style="top: '+list.top+'; left: '+list.left+'; width: '+list.width+'; height: '+list.height+';">');
+	$("#board").append('<div id="list-' + i + '" class="list">');
+	$("#list-" + i).css({
+		top: list.top,
+		left: list.left,
+		width: list.width,
+		height: list.height
+	});
 
-	$(id).append('<div id="list-' + i + '-header" class="list-header">');
-	$(id).append('<table id="list-' + i + '-table" class="list-content">');
-	$(id).append('<div id="list-' + i + '-footer" class="list-footer">');
+	$(id)
+		.append('<div id="list-' + i + '-header" class="list-header">')
+		.append('<table id="list-' + i + '-table" class="list-content">')
+		.append('<div id="list-' + i + '-footer" class="list-footer">');
 
 	$(id + "-header").append('<table>');
 	$(id + "-header table").append('<tr>');
 
-	$(id + "-header table tr").append('<td id="list-' + i + '-name" class="name">');
-	$(id + "-header table tr").append('<td class="header-drag-handler">');
-	$(id + "-header table tr").append('<td id="list-' + i + '-X" class="X">');
+	$(id + "-header table tr")
+		.append('<td id="list-' + i + '-name" class="name">')
+		.append('<td class="header-drag-handler">')
+		.append('<td id="list-' + i + '-X" class="X">');
 
-	$(id + "-header table tr td.name").append('<input class="text hidden" type="text" placeholder="List ' + i + '" />');
-	$(id + "-header table tr td.name").append('<span onclick="hideSpan(\'' + id + '-header table tr td.name\')">');
-	$(id + "-header table tr td.name span").html(list.name);
-	$(id + "-header table tr td.name input").val(list.name);
+	$(id + "-header td.name")
+		.append('<input class="text hidden" type="text" placeholder="List ' + i + '" />')
+		.append('<span onclick="hideSpan(\'' + id + '-header table tr td.name\')">');
+	$(id + "-header td.name span").html(list.name);
+	$(id + "-header td.name input").val(list.name);
 	addKeyListener(id + "-header table tr td.name");
 	
-	$(id + "-header table tr td.header-drag-handler").append('<div id="list-' + i + '-header-drag-handler-img" class="header-drag-handler-img grab">');
+	$(id + "-header td.header-drag-handler").append('<div id="list-' + i + '-header-drag-handler-img" class="header-drag-handler-img grab">');
 	$("#header-drag-handler-src svg").clone().appendTo(id + "-header-drag-handler-img");
 	
 	$("#X-src svg").clone().appendTo(id + "-X");
@@ -51,9 +111,15 @@ function addList(list){
 	for(var j = 0; j < list.items.length; j++){
 		createRow(i, j);
 
-		if(list.items[j].value){
-			$(id + "-row-" + j + "-task span").html(list.items[j].value).addClass("task").removeClass("hidden");
-			$(id + "-row-" + j + "-task input").val(list.items[j].value).addClass("hidden");
+		let val = list.items[j].value;
+		if(val){
+			$(id + "-row-" + j + "-task span")
+				.html(val)
+				.addClass("task")
+				.removeClass("hidden");
+			$(id + "-row-" + j + "-task input")
+				.val(val)
+				.addClass("hidden");
 		} else {
 			hideSpan(i, j);
 		}
@@ -61,8 +127,9 @@ function addList(list){
 		$(id + "-row-" + j + " td.check input").attr("checked", list.items[j].checked);
 	}
 
-	$(id + "-footer").append('<div class="list-footer-left">');
-	$(id + "-footer").append('<div class="progress-bar-shell">');
+	$(id + "-footer")
+		.append('<div class="list-footer-left">')
+		.append('<div class="progress-bar-shell">');
 
 	$(id + "-footer .list-footer-left").append('<div class="plus-img" onclick="addRow(' + i + ')">');
 	$(id + "-footer .progress-bar-shell").append('<div id="list-' + i + '-progress-bar" class="inner" />');
@@ -70,9 +137,10 @@ function addList(list){
 	$("#plus-src svg").clone().appendTo(id + "-footer .plus-img");
 
 	/* Technical variables, reset upon refresh */
-	$(id).attr("counter", list.items.length);
-	$(id).attr("total-rows", list.items.length);
-	$(id).attr("content-height", 0);
+	$(id)
+		.attr("counter", list.items.length)
+		.attr("total-rows", list.items.length)
+		.attr("content-height", 0);
 
 	/* Adding css to various elements */
 	updateProgressBar(i);
@@ -81,15 +149,17 @@ function addList(list){
 
 	/* Listener for when the list is resized */
 	new ResizeSensor($(id)[0], function() {
-		for(var i = 0; i < $(id + " span").length; i++){
-			let span = $($(id + " span")[i]);
+		for(var i = 0; i < $(id + " .list-content span").length; i++){
+			let span = $($(id + " .list-content span")[i]);
 			span.width(span.parent().width() * .9);
 		}
 	});
 
 	/* Listener for when the X is clicked */
 	$(id + " .X svg").click(function(){
-		$("#" + $(this).parent()[0].id.slice(0, -2)).remove();
+		$(this)
+			.closest(".list")
+			.remove();
 	});
 
 	bindTableDnD(i);
@@ -105,25 +175,29 @@ function addNote(note){
 
 	let id = "#note-" + i;
 
-	$("#board").append('<div id="note-' + i + '" class="note" style="top: '+note.top+'; left: '+note.left+'; width: '+note.width+'; height: '+note.height+';">');
+	$("#board").append('<div id="note-' + i + '" class="note">');
+	$("#note-" + i).css({top: note.top, left: note.left, width: note.width, height: note.height});
 
-	$(id).append('<div id="note-' + i + '-header" class="note-header">');
-	$(id).append('<div id="note-' + i + '-content" class="note-content">');
+	$(id)
+		.append('<div id="note-' + i + '-header" class="note-header">')
+		.append('<div id="note-' + i + '-content" class="note-content">');
 
 	$(id + "-header").append('<table>');
 	$(id + "-header table").append('<tr>');
 
-	$(id + "-header table tr").append('<td id="note-' + i + '-name" class="name">');
-	$(id + "-header table tr").append('<td class="header-drag-handler">');
-	$(id + "-header table tr").append('<td id="note-' + i + '-X" class="X">');
+	$(id + "-header table tr")
+		.append('<td id="note-' + i + '-name" class="name">')
+		.append('<td class="header-drag-handler">')
+		.append('<td id="note-' + i + '-X" class="X">');
 
-	$(id + "-header table tr td.name").append('<input class="text hidden" type="text" placeholder="Note ' + i + '" />');
-	$(id + "-header table tr td.name").append('<span onclick="hideSpan(\'' + id + '-header table tr td.name\')">');
-	$(id + "-header table tr td.name span").html(note.name);
-	$(id + "-header table tr td.name input").val(note.name);
-	addKeyListener(id + "-header table tr td.name");
+	$(id + "-header td.name")
+		.append('<input class="text hidden" type="text" placeholder="Note ' + i + '" />')
+		.append('<span onclick="hideSpan(\'' + id + '-header table tr td.name\')">');
+	$(id + "-header td.name span").html(note.name);
+	$(id + "-header td.name input").val(note.name);
+	addKeyListener(id + "-header td.name");
 	
-	$(id + "-header table tr td.header-drag-handler").append('<div id="note-' + i + '-header-drag-handler-img" class="header-drag-handler-img grab">');
+	$(id + "-header td.header-drag-handler").append('<div id="note-' + i + '-header-drag-handler-img" class="header-drag-handler-img grab">');
 	$("#header-drag-handler-src svg").clone().appendTo(id + "-header-drag-handler-img");
 
 	$("#X-src svg").clone().appendTo(id + "-X");
@@ -133,7 +207,9 @@ function addNote(note){
 
 	/* Listener for when the X is clicked */
 	$(id + " .X svg").click(function(){
-		$("#" + $(this).parent()[0].id.slice(0, -2)).remove();
+		$(this)
+			.closest(".note")
+			.remove();
 	});
 
 	dragElement($(id)[0]);
@@ -184,20 +260,21 @@ function dragElement(elmnt) {
 }
 
 function addKeyListener(list, row, taskClass){
-	let elem = $(typeof list === "string" ? list:("#list-" + list + "-row-" + row + "-task"));
-	elem.find("input").on("keypress", function(e){
-		let span = elem.find("span"),
-			input = elem.find("input"),
-			field = $.trim(input.val());
+	let elem = $(typeof list === "string" ? list:(getID(list, row) + "-task"));
+	elem.find("input").on("keydown", function(e){
 		// if the enter key is pressed and the text box isn't blank
-		if (e.keyCode == 13 && field) {
-			span.html(field);
-			span.removeClass("hidden")
+		if ((e.keyCode || e.which) == 13) {
+			let span = elem.find("span"),
+			input = elem.find("input"),
+			field = $.trim(input.val()) ? $.trim(input.val()):input.attr("placeholder");
+			
+			span
+				.html(field)
+				.removeClass("hidden")
 			if(taskClass){
 				span.addClass("task");
 			}
 			input.addClass("hidden");
-			return false; // this part may or may not be important
 		}
 	});
 }
@@ -205,124 +282,166 @@ function addKeyListener(list, row, taskClass){
 function hideSpan(list, row){
 	if(typeof list === "string"){
 		$(list + " span").addClass('hidden');
-		$(list + " input").removeClass('hidden');
-		return;
+		$(list + " input")
+			.removeClass('hidden')
+			.focus();
+	} else {
+		$(getID(list, row) + "-task span")
+			.addClass('hidden')
+			.removeClass('task');
+		$(getID(list, row) + "-task input")
+			.removeClass('hidden')
+			.focus();
 	}
-	$("#list-" + list + "-row-" + row + "-task span").addClass('hidden').removeClass('task');
-	$("#list-" + list + "-row-" + row + "-task input").removeClass('hidden');
 }
 
 function updateProgressBar(list){
-	let ratio = $("#list-" + list + " input:checked").length / $("#list-" + list + " input[type=checkbox]").length,
-		bar = $("#list-" + list + "-progress-bar");
-	bar.width(ratio*100 + "%");
-	bar.css("background-color", "hsl(" + ratio*120 + ", 100%, 50%)");
+	let ratio = $(getID(list) + " input:checked").length / $(getID(list) + " input[type=checkbox]").length;
+	$(getID(list) + "-progress-bar")
+		.width(ratio*100 + "%")
+		.css("background-color", "hsl(" + ratio*120 + ", 100%, 50%)");
 }
 
 function createRow(list, row){
-	$("#list-" + list + "-table").append('<tr id="list-' + list + '-row-' + row + '">');
+	let rowID = getID(list, row);
+	$(getID(list) + "-table").append('<tr id="list-' + list + '-row-' + row + '">');
 
-	$("#list-" + list + "-row-" + row).append('<td class="row-drag-handler">');
-	$("#list-" + list + "-row-" + row).append('<td id="list-' + list + '-row-' + row + '-task">');
+	$(rowID)
+		.append('<td class="row-drag-handler">')
+		.append('<td id="list-' + list + '-row-' + row + '-task">')
+		.append('<td class="check">')
+		.append('<td class="trash">');
 
-	$("#list-" + list + "-row-" + row + " td.row-drag-handler").append('<div class="row-drag-handler-img grab">');
-	$("#row-drag-handler-src svg").clone().appendTo("#list-" + list + "-row-" + row + " .row-drag-handler-img");
+	$(rowID + " td.row-drag-handler").append('<div class="row-drag-handler-img grab">');
+	$("#row-drag-handler-src svg").clone().appendTo(rowID + " .row-drag-handler-img");
 
-	$("#list-" + list + "-row-" + row + "-task").append('<input class="text" type="text" placeholder="Task ' + row + '" />');
-	$("#list-" + list + "-row-" + row + "-task").append('<span class="hidden" onclick="hideSpan(' + list + ', ' + row + ')">');
+	$(rowID + "-task")
+		.append('<input class="text" type="text" placeholder="Task ' + (row + 1) + '" />')
+		.append('<span class="hidden" onclick="hideSpan(' + list + ', ' + row + ')">');
+	$(rowID + "-task input").blur(function(){
+		let span = $(rowID + "-task span"),
+			input = $(rowID + "-task input"),
+			field = $.trim(input.val()) ? $.trim(input.val()):input.attr("placeholder");
+		
+		span
+			.html(field ? field:input.attr("placeholder"))
+			.removeClass("hidden")
+			.addClass("task")
+		$(rowID + "-task input").addClass("hidden");
+	})
 
-	$("#list-" + list + "-row-" + row).append('<td class="check">');
-	$("#list-" + list + "-row-" + row).append('<td class="trash">');
+	$(rowID + " td.check").append('<input type="checkbox" onclick="updateProgressBar(' + list + ')" />');
+	$(rowID + " td.trash").append('<div class="trash-img" onclick="deleteRow(' + list + ', ' + row + ')">');
 
-	$("#list-" + list + "-row-" + row + " td.check").append('<input type="checkbox" onclick="updateProgressBar(' + list + ')" />');
-	$("#list-" + list + "-row-" + row + " td.trash").append('<div class="trash-img" onclick="deleteRow(' + list + ', ' + row + ')">');
-
-	$("#trash-src svg").clone().appendTo("#list-" + list + "-row-" + row + " .trash-img");
+	$("#trash-src svg").clone().appendTo(rowID + " .trash-img");
 
 	/* Adding a listeniner for the enter key */
 	addKeyListener(list, row, true);
 }
 
 function addRow(list){
-	let oldHeight = $("#list-" + list).height();
+	let listID = getID(list);
+	
+	let oldHeight = $(listID).height();
 
-	let newRow = $("#list-" + list).attr("counter") * 1;
+	let newRow = $(listID).attr("counter") * 1; // $.attr("...") returns a string. Multiplying by one converts string into an arithmetic-ready number.
 
 	createRow(list, newRow);
 	addKeyListener(list, newRow, true);
 
-	// element.html() returns a string. Multiplying by one to convert string to an arithmetic-ready number.
-	$("#list-" + list).attr("counter", newRow + 1);
-	$("#list-" + list).attr("total-rows", $("#list-" + list).attr("total-rows") * 1 + 1);
+	$(listID)
+		.attr("total-rows", $(listID).attr("total-rows") * 1 + 1)
+		.attr("counter", newRow + 1);
 
 	updateProgressBar(list);
 	setListHeight(list, oldHeight);
 
-	$("#list-" + list + "-table tr").removeClass("even-row");
-	$("#list-" + list + "-table tr:even").addClass("even-row");
+	$(listID + "-table tr").removeClass("even-row");
+	$(listID + "-table tr:even").addClass("even-row");
 
-	bindTableDnD(list);
+	$(getID(list, newRow) + "-task input").focus();
+
+	$(listID + "-table").tableDnDUpdate()
 }
 
 function bindTableDnD(list){
-	$("#list-" + list + "-table").tableDnD({
+	let listID = getID(list);
+	$(listID + "-table").tableDnD({
 		onDragClass: "picked-up grabbed",
 		onDrop: function(){
-			$("#list-" + list + "-table tr").removeClass("even-row");
-			$("#list-" + list + "-table tr:even").addClass("even-row");
-			$("#list-" + list + " .row-drag-handler-img").removeClass("grabbed");
+			$(listID + "-table tr").removeClass("even-row");
+			$(listID + "-table tr:even").addClass("even-row");
+			$(listID + " .row-drag-handler-img").removeClass("grabbed");
 		},
 		dragHandle: ".row-drag-handler",
 		onDragStart: function(table, row) {
-			$("#list-" + list + " .row-drag-handler-img").addClass("grabbed");
+			$(listID + " .row-drag-handler-img").addClass("grabbed");
 		}
 	});
 }
 
-/*
-**	!!!  DO NOT TOUCH  !!!
-**	Yes, this function is quite messy, but it works.
-*/
+/* This function sets the list height and the scroll height. It was a pain to perfect as evident by the quantity of if() statements */
 function setListHeight(list, oldHeight){
-	let newHeight = $("#list-" + list + "-header").height() + $("#list-" + list + "-table").height() + $("#list-" + list + "-footer").height(),
-		numRows = $("#list-" + list).attr("total-rows") * 1,
-		contentHeight = $("#list-" + list).attr("content-height") * 1,
+	let listE = $(getID(list)),
+		
+		newHeight = $(getID(list) + "-header").height() + $(getID(list) + "-table").height() + $(getID(list) + "-footer").height(),
+		contentHeight = listE.attr("content-height") * 1;
 
-		listE = $("#list-" + list);
-
-	$("#list-" + list).attr("content-height", newHeight);
+	listE.attr("content-height", newHeight);
 
 	if(contentHeight === 0){
 		listE.css("min-height", newHeight + "px");
 	}
 	if(oldHeight >= contentHeight){
-		newHeight += oldHeight - contentHeight
-		listE.css("height", newHeight + "px");
+		listE.css("height", (newHeight + oldHeight - contentHeight) + "px");
 		if(oldHeight == contentHeight){
-			$("#list-" + list).attr("content-height", listE.height());
+			listE.attr("content-height", listE.height());
 		}
 	} else if(newHeight < oldHeight){
 		listE.css("height", newHeight + "px");
 	}
-	listE.scrollTop($("#list-" + list)[0].scrollHeight);
+	if(newHeight > contentHeight){
+		listE.scrollTop(listE[0].scrollHeight);
+	}
 }
 
 function deleteRow(list, row){
-	let oldHeight = $("#list-" + list).height();
+	let listID = getID(list);
+	let oldHeight = $(listID).height();
 
-	$("#list-" + list + "-row-" + row).remove();
+	$(getID(list, row)).remove();
 
-	$("#list-" + list + "-table tr").removeClass("even-row");
-	$("#list-" + list + "-table tr:even").addClass("even-row");
+	$(listID + "-table tr").removeClass("even-row");
+	$(listID + "-table tr:even").addClass("even-row");
 
 	updateProgressBar(list);
 	setListHeight(list, oldHeight);
 
 	// element.html() returns a string. Multiplying by one to convert string to an arithmetic-ready number.
-	$("#list-" + list).attr("total-rows", $("#list-" + list).attr("total-rows") * 1 + 1);
+	$(listID).attr("total-rows", $(listID).attr("total-rows") * 1 + 1);
 }
 
 function setTextareaHeight(note){
 	let area = $("#note-" + note + " textarea");
 	area.height(area.parent().height());
+}
+
+
+/*
+**	Functions for the changelog
+*/
+function expand(){
+	$("#changelog").animate({height: "30vh", width: "30vw"}, 250)
+	$("#changelog-img").css({bottom: "30vh", right: "30vw"})
+	$("#changelog-img circle").css({fill: "rgba(0, 0, 0, 1)"})
+	$("#changelog-img path[hover-action=\"show\"]").css({stroke: "rgba(255, 255, 255, 1)"})
+	$("#changelog-img").attr("onclick", "retract()")
+}
+
+function retract(){
+	$("#changelog").animate({height: "0", width: "0"}, 250)
+	$("#changelog-img").css({bottom: "3px", right: "3px"})
+	$("#changelog-img circle").css({fill: "rgba(0, 0, 0, 0)"})
+	$("#changelog-img path[hover-action=\"show\"]").css({stroke: "rgba(255, 255, 255, 0)"})
+	$("#changelog-img").attr("onclick", "expand()")
 }
