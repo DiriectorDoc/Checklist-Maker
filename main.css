@@ -5,8 +5,32 @@ body {
 	background: #555;
 	margin: 0;
 }
+code {
+	font-family: "Lucida Console", Monaco, monospace;
+	background: #888;
+}
+hr.dashed {
+  border: 1px dashed rgba(0, 0, 0, .5)
+}
+iframe {
+	border: 2px solid #444;
+	box-shadow: -3px 15vh #333;
+}
 image-src {
 	display: none;
+}
+kbd {
+	background-color: #eee;
+	border-radius: 3px;
+	border: 1px solid #b4b4b4;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
+	color: #333;
+	display: inline-block;
+	font-size: .85em;
+	font-weight: 700;
+	line-height: 1;
+	padding: 2px 4px;
+	white-space: nowrap;
 }
 svg {
 	-webkit-touch-callout: none;
@@ -21,6 +45,16 @@ table {
 	font-size: 1em;
 	-webkit-border-horizontal-spacing: 0;
 	-webkit-border-vertical-spacing: 0;
+}
+td span:not(.hidden) {
+	display: block;
+}
+td.name span {
+	width: 95%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	word-break: break-all;
 }
 td {
 	min-width: 1.4em;
@@ -118,6 +152,9 @@ tr {
 .note-content {
 	height: calc(100% - 1.8em);
 }
+.nowrap {
+	white-space: nowrap;
+}
 .picked-up {
 	background: #bbb;
 }
@@ -207,28 +244,41 @@ tr {
 .X:hover {
 	cursor: pointer;
 }
+#changelog iframe{
+	height: 100%;
+	width: 95%;
+}
+#changelog {
+	height: 0;
+	width: 0;
+	bottom: 3px;
+	right: 3px;
+	position: absolute;
+}
+#changelog-img circle,path[hover-action="show"] {
+	cursor: pointer;
+}
+#changelog-img svg {
+	height: 2em;
+}
+#changelog-img {
+	height: 2em;
+	width: 2em;
+	bottom: 3px;
+	right: 3px;
+	position: absolute;
+}
+#changelog-img,#changelog-img * {
+	-webkit-transition: all 250ms ease-out;
+	-moz-transition: all 250ms ease-out;
+	-ms-transition: all 250ms ease-out;
+	-o-transition: all 250ms ease-out;
+	transition: all 250ms ease-out;
+}
 #header {
 	background: #55a;
 	margin: 0;
 	padding: 20px 1.5em 1px 1.5em;
-}
-#toolbar .file-img {
-	cursor: pointer;
-}
-#toolbar .file-img:hover svg {
-	stroke: #000;
-}
-#toolbar svg {
-	fill: none;
-	height: 2em;
-	padding: 0 0.33em;
-	stroke: #333;
-}
-#toolbar {
-	display: block;
-	position: absolute;
-	right: 3px;
-	top: calc(2.67em + 5px);
 }
 #title {
 	margin: 0.67em 0 5px 0;
@@ -237,6 +287,34 @@ tr {
 	font-size: 2em;
 	margin: calc(0.67em - 2px) 0 3px 0;
 	padding: 0;
+}
+#toolbar .file-img {
+	cursor: pointer;
+}
+#toolbar .file-img:hover svg {
+	stroke: #000;
+}
+#toolbar .file-img.red:hover svg path[fill="none"] {
+	stroke: #f00;
+}
+#toolbar .file-img.red:hover svg path[color="#000"] {
+	fill: #f00;
+}
+#toolbar svg {
+	fill: none;
+	height: 2em;
+	padding: 0 0.33em;
+	stroke: #333;
+}
+#toolbar .file-img.red svg {
+	stroke: #c33;
+	fill: #c33;
+}
+#toolbar {
+	display: block;
+	position: absolute;
+	right: 3px;
+	top: calc(2.67em + 5px);
 }
 #version-info {
 	bottom: 3px;

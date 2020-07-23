@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    	<meta charset="utf-8">
+        <title>Chanhelog</title>
+        <link href="main.css" rel="stylesheet" type="text/css">
+		<style>
+		::-webkit-scrollbar{width:initial}::-webkit-scrollbar-thumb{border-radius:10px;background:#000}::-webkit-scrollbar-track{display:none}
+		</style>
+    </head>
+	<body>
+		<log log-number="1">
+			<h1>v0.2_Beta</h1>
+			<hr class="dashed" />
+			<p>
+				This is the first Beta update. It's been more than a week since the last alpha update, but now, we're flipping the switch; this project is now in Beta, not that anything has changed.
+			</p>
+			<p>
+				So, what's the deal with these now-called Beta versions? All the features initially intended to be implemented have been implemented. There will still be content updates here and there, but most of the updates from here on out will mainly be UX improvements and bug fixes.
+			</p>
+			<h2>Changes</h2>
+			<h3>Major</h3>
+			<ul>
+				<li>Added this here changelog</li>
+				<li>Began hosting this project at <a href="https://diriectordoc.github.io/Checklist-Maker/">diriectordoc.github.io/Checklist-Maker</a><span id="appx 0"></span></li>
+				<li>Altered version naming convention: <span class="nowrap">"v0.1.X_alpha" &rarr; "v0.X_Beta"</span></li>
+				<li>Tweaked the scrolling that happens after adding/removing an item from the list</li>
+				<li>Input fields will now save its value if you click off of it</li>
+				<li indent="1">Pressing <kbd>&#8629; Enter</kbd> still works, but now there won't be numerous input fields all over the place.</li>
+				<li>Input fields will now focus immediately when shown</li>
+				<li>If an input field is blank on submition, the item will default to the input field's placeholder</li>
+				<li>Added "Delete all" button to the toolbar</li>
+				<li>Started working on an encryption system</li>
+				<li indent="1">Not done yet. Should be next update maybe.</li>
+				<li>Removed Herobrine</li>
+			</ul>
+			<h3>Technical</h3>
+			<ul>
+				<li>Updated <code>tableDnD.js</code> to version 1.0.3</li>
+				<li indent="1">This doesn't change much. It mainly fixes a console error message that didn't affect anything.</li>
+				<li>Actually started using JQ properly. Managed to save probably hundreds of bytes of duplicate <code>$()</code> functions.</li>
+				<li>Made function <code>getID()</code> which returns the string ID of a list or list row &ndash; saves space</li>
+				<li>Moved variable <code>defaultBoard</code> to <code>main.js</code> and also turned it into a constant</li>
+				<li>Replaced: <span class="nowrap"><code>.on("keypress", call)</code> &rarr; <code>.on("keydown", call)</code></span></li>
+				<li indent="1">Deprecated</li>
+			</ul>
+		</log>
+		<script>
+			let appendices = [
+				{
+					text: "&nbsp;(You're here)",
+					condition: window.location.href.match(/https?\:\/{2}diriectordoc\.github\.io\/Checklist-Maker\/?/g)
+				}
+			];
+			appendices.forEach(function(e, i){
+				if(e.condition){
+					document.getElementById("appx " + i).innerHTML = e.text;
+				}
+			});
+			let elems = [];
+			Array.prototype.slice.call(document.getElementsByTagName("LI")).forEach(function(e){
+				if(e.attributes.indent){
+					e.style.marginLeft = e.attributes.indent.value * 1.15 + "em";
+					e.style.listStyleType = "circle";
+				}
+			});
+		</script>
+	</body>
+</html>

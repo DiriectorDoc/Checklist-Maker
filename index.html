@@ -6,70 +6,24 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 -->
 <html lang="en">
 	<head>
-    	<meta charset="utf-8">
-        <title>Checklist</title>
-        <link href="main.css" rel="stylesheet" type="text/css">
+		<meta charset="utf-8">
+		<title>Checklist</title>
+		<link href="main.css" rel="stylesheet" type="text/css">
 		<link rel="icon" type="image/png" href="icon/icon.png">
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/TableDnD/0.9.1/jquery.tablednd.js" integrity="sha256-d3rtug+Hg1GZPB7Y/yTcRixO/wlI78+2m08tosoRn7A=" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/TableDnD/1.0.3/jquery.tablednd.min.js" integrity="sha512-IJKMUzfTObZ5JYA5j7PjzMpzgNyJI1tVba8DlDjodpEXG8ZQfri1QfAIrzL9aTwjQEfHrqdJerPXT9xRJkOZ4g==" crossorigin="anonymous"></script>
 		<script type="text/javascript" src="css-element-queries-by-marcj/ResizeSensor.js"></script>
-        <script type="text/javascript" src="main.js"></script>
-        <script type="text/javascript" src="exportBoard.js"></script>
+		<script type="text/javascript" src="main.js"></script>
+		<script type="text/javascript" src="encryptor.min.js"></script>
+		<script type="text/javascript" src="exportBoard.js"></script>
 		<script type="text/javascript" src="importBoard.js"></script>
 		<script type="text/javascript">
-			let defaultBoard = {
-				version: 0.0108,
-				title: "Checklist",
-				lists: [
-					{
-						name: "List 0",
-						items: [
-							{
-								value: "Task 0",
-								checked: false
-							},
-							{
-								value: "Task 1",
-								checked: false
-							},
-							{
-								value: "Task 2",
-								checked: false
-							},
-							{
-								value: "Task 3",
-								checked: false
-							},
-							{
-								value: "Task 4",
-								checked: true
-							}
-							
-						],
-						top: "100px",
-						left: "15px",
-						width: "350px",
-						height: "223px"
-					}
-				],
-				notes: [
-					{
-						name: "Note 1",
-						value: "hello world",
-						top: "100px",
-						left: "400px",
-						width: "350px",
-						height: "223px"
-					}
-				]
-			}
-			
 			$(document).ready(function(){
 				// Add refresh warning
 				window.onbeforeunload = function(){
 					return "Data will be lost if you exit or refresh.";
 				};
-				
+
 				$(window).resize(function(){
 					$(".list,.note").toArray().forEach(function(e){
 						$(e).css({
@@ -78,27 +32,32 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 						});
 					});
 				});
-				
+
 				// Add keylistener to title input
-				$("#title-text").on("keypress", function(e){
+				function submitTitle(){
 					let h1 = $("#title"),
 						input = $("#title-text"),
-						field = $.trim(input.val());
-					// if the enter key is pressed and the text box isn't blank
-					if (e.keyCode == 13 && field) {
-						h1.html(field);
-						$("head title").html(field);
-						h1.removeClass("hidden");
-						input.addClass("hidden");
-						return false; // this part may or may not be important
-					}
-				});
-				
-				// Initialise the list
-				createBoard(defaultBoard);
+						field = $.trim(input.val()) ? $.trim(input.val()):input.attr("placeholder");
+
+					$("head title").html(field);
+					h1
+						.html(field)
+						.removeClass("hidden");
+					input.addClass("hidden");
+				}
+				$("#title-text")
+					.on("keydown", function(e){
+						// if the enter key is pressed and the text box isn't blank
+						if((e.keyCode || e.which) == 13){
+							submitTitle();
+						}
+					})
+					.blur(submitTitle);
+
+				$("#changelog-img").attr("onclick", "expand()");
 			});
 		</script>
-    </head>
+	</head>
 	<body>
 		<image-src id="header-drag-handler-src">
 			<svg viewBox="0 0 90 25"><g fill="none" stroke="#888" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"><path d="M2.5 2.5h85M2.5 12.5h85M2.5 22.5h85"/></g></svg>
@@ -110,7 +69,7 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 			<svg viewBox="0 0 35 35"><path fill="none" stroke="#888" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M7.5 7.5h20m-20 10h20m-20 10h20"/></svg>
 		</image-src>
 		<image-src id="trash-src">
-			<svg viewBox="0 0 50 50"><path fill="none" stroke="red" stroke-linecap="square" stroke-linejoin="round" stroke-width="2" d="M15 14l2 25h16l2-25"/><path fill="none" stroke="red" stroke-width="2" d="M21 18v16M25 18l.0139 16M29 18v16M12 13h26"/><path fill="none" stroke="red" stroke-linejoin="round" stroke-width="2" d="M21 12V9h8v3"/><path d="M21 8a1.0001 1.0001 0 00-1 1v3h2v-2h6v2h2V9a1.0001 1.0001 0 00-1-1h-8z"  fill="red" color="#000" overflow="visible"/><path d="M22 10v1c0-.558324.441676-1 1-1h4c.558324 0 1 .441676 1 1v-1"  fill="red" color="#000" overflow="visible"/></svg>
+			<svg viewBox="0 0 50 50"><path fill="none" stroke="red" stroke-linecap="square" stroke-linejoin="round" stroke-width="2" d="M15 14l2 25h16l2-25"/><path fill="none" stroke="red" stroke-width="2" d="M21 18v16M25 18l.0139 16M29 18v16M12 13h26"/><path fill="none" stroke="red" stroke-linejoin="round" stroke-width="2" d="M21 12V9h8v3"/><path d="M21 8a1.0001 1.0001 0 00-1 1v3h2v-2h6v2h2V9a1.0001 1.0001 0 00-1-1h-8z" fill="red" color="#000" overflow="visible"/><path d="M22 10v1c0-.558324.441676-1 1-1h4c.558324 0 1 .441676 1 1v-1" fill="red" color="#000" overflow="visible"/></svg>
 			<!-- This graphic is a recoloured and compressed copy of [[File:Иконка мусорки.svg]] by Alexander Madyankin -->
 			<!-- This graphic was made available using the MIT licence -->
 			<!-- Copyright © 2014 Alexander Madyankin, Roman Shamin -->
@@ -120,7 +79,13 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 			<svg viewBox="0 0 20 20"><g fill="none" stroke-width="5"><path d="M10 0v20M0 10h20"/></g></svg>
 		</image-src>
 		<div id="container">
-			<span id="version-info">v0.1.8_alpha &mdash; D-Doc, 2020</span>
+			<span id="version-info">v0.2_Beta &mdash; D-Doc, 2020</span>
+			<span id="changelog-img">
+				<svg viewBox="0 0 100 100"><path fill="none" stroke="#000" stroke-linejoin="round" stroke-width="4" d="M70 19.6v13.3h13.6z"/><path fill="none" stroke="#000" stroke-linejoin="round" stroke-width="4" d="M41.1 19.6v27.7h20.2c3.7 0 6.6 2.9 6.6 6.5v20.3h15.7V33L69.9 19.6l13.7 13.3H69.9V19.6z"/><rect width="51.5" height="32.3" x="16.4" y="47.3" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" ry="6.6"/><path d="M16.4 58v3.5h8.7v3h-8.7V68h8.7v3h-8.7v3.6h8.7v4.9h3.6v-5h6.8v5H39v-5h6.8v5h3.6v-5h6.8v5h3.5v-5H68v-3.4h-8.2v-3H68v-3.6h-8.2v-3H68V58zm12.3 3.5h6.8v3h-6.8zm10.3 0h6.8v3H39zm10.4 0h6.8v3h-6.8zM28.7 68h6.8v3h-6.8zM39 68h6.8v3H39zm10.4 0h6.8v3h-6.8z" overflow="visible"/><path stroke="#000" stroke-width="6.9" d="M25.5 15.8v17h10v-17z" transform="matrix(.51808 0 0 .65539 16.3 31.3)"/><path stroke="#000" stroke-width="6.9" d="M25.5 15.8v17h10v-17z" transform="matrix(.51808 0 0 .65539 37 31.3)"/><path fill="none" stroke="#000" stroke-linecap="round" stroke-width="4" d="M60 41.7h14.5v0"/><path d="M67.3 50.3v3.5h7.2a1.8 1.8 0 001.7-1.8 1.8 1.8 0 00-1.7-1.7H72zM67.3 59v3.6h7.2a1.8 1.8 0 001.7-1.7 1.8 1.8 0 00-1.7-1.8H72z" overflow="visible"/><circle cx="50" cy="50" r="47.5" fill="rgba(0, 0, 0, 0)" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/><path hover-action="show" stroke="rgba(255, 255, 255, 0)" fill="none" d="M20 40l30 20 30-20" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/></svg>
+			</span>
+			<span id="changelog">
+				<iframe src="changelog.html"></iframe>
+			</span>
 			<span id="toolbar">
 				<span class="file-img" tooltip="Add a new list" onclick="addList()">
 					<svg viewBox="0 0 47.8 56.9"><path d="M37 2v9h9z" stroke-width="4" stroke-linejoin="round"/><path d="M18 2v37h28V11l-9-9z" stroke-width="4" stroke-linejoin="round"/><path d="M31 33l-6-7M41 16L31 33" stroke-width="4" stroke-linecap="round"/><path d="M10 37v20M0 47h20" stroke-width="5"/></svg>
@@ -134,15 +99,18 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 				<span class="file-img" tooltip="Export board" onclick="exportBoard()">
 					<svg viewBox="0 0 97 90"><path d="M48 4v19h19z" stroke-width="8" stroke-linejoin="round"/><path d="M4 4v82h63V23L48 4z" stroke-width="8" stroke-linejoin="round"/><path d="M80 39l13 13-13 12" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M92 52H54" stroke-width="8" stroke-linecap="round"/></svg>
 				</span>
+				<span class="file-img red" tooltip="Delete all" onclick="if(confirm('Are you sure you want do delete everything?\nYour current board will not be saved.'))$('.list,.note').remove()">
+					<svg viewBox="12 8 26 32"><path fill="none" stroke-linecap="square" stroke-linejoin="round" stroke-width="2" d="M15 14l2 25h16l2-25"/><path fill="none" stroke-width="2" d="M21 18v16M25 18l.0139 16M29 18v16M12 13h26"/><path fill="none" stroke-linejoin="round" stroke-width="2" d="M21 12V9h8v3"/><path d="M21 8a1.0001 1.0001 0 00-1 1v3h2v-2h6v2h2V9a1.0001 1.0001 0 00-1-1h-8z" color="#000" overflow="visible"/><path d="M22 10v1c0-.558324.441676-1 1-1h4c.558324 0 1 .441676 1 1v-1" color="#000" overflow="visible"/></svg>
+				</span>
 			</span>
 			<div id="header">
 				<div class="social">
 					<a href="https://github.com/DiriectorDoc/Checklist-Maker"><svg viewBox="0 0 16 16" id="github"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg></a>
 				</div>
-				<h1 id="title" onclick='$("#title").addClass("hidden"); $("#title-text").removeClass("hidden")'>
+				<h1 id="title" onclick='$("#title").addClass("hidden"); $("#title-text").removeClass("hidden").focus()'>
 					Checklist
 				</h1>
-				<input type="text" id="title-text" class="hidden" placeholder="title" />
+				<input type="text" id="title-text" class="hidden" placeholder="Checklist" />
 			</div>
 			<div id="board" list-counter="0">
 			</div>
