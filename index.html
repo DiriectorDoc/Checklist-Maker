@@ -18,29 +18,35 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 		<script type="text/javascript" src="exportBoard.js"></script>
 		<script type="text/javascript" src="importBoard.js"></script>
 		<script type="text/javascript">
+			window.config = {
+				encrypt: false,
+				unloadWarning: true
+			}
+
 			$(document).ready(function(){
 				// Add refresh warning
-				window.onbeforeunload = function(){
-					return "Data will be lost if you exit or refresh.";
-				};
-
-				$(window).resize(function(){
-					$(".list,.note").toArray().forEach(function(e){
-						$(e).css({
-							"left": "min(" + e.style.left + ", calc(100vw - 4px - " + $(e).width() + "px))",
-							"top": "min(" + e.style.top + ", calc(100vh - 4px - " + $(e).height() + "px))"
+				$(window)
+					.resize(function(){
+						$(".list,.note").each(function(i, e){
+							$(e).css({
+								"left": "min(" + e.style.left + ", calc(100vw - 4px - " + $(e).width() + "px))",
+								"top": "min(" + e.style.top + ", calc(100vh - 4px - " + $(e).height() + "px))"
+							});
 						});
+					})
+					.on("beforeunload", function(e){
+						e.preventDefault();
+						e.returnValue = "";
+						return "Data will be lost if you exit or refresh.";
 					});
-				});
 
 				// Add keylistener to title input
 				function submitTitle(){
-					let h1 = $("#title"),
-						input = $("#title-text"),
-						field = $.trim(input.val()) ? $.trim(input.val()):input.attr("placeholder");
+					let input = $("#title-text"),
+						field = $.trim(input.val()) || input.attr("placeholder");
 
 					$("head title").html(field);
-					h1
+					$("#title")
 						.html(field)
 						.removeClass("hidden");
 					input.addClass("hidden");
@@ -79,7 +85,7 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 			<svg viewBox="0 0 20 20"><g fill="none" stroke-width="5"><path d="M10 0v20M0 10h20"/></g></svg>
 		</image-src>
 		<div id="container">
-			<span id="version-info">v0.2_Beta &mdash; D-Doc, 2020</span>
+			<span id="version-info">v0.3_Beta &mdash; D-Doc, 2020</span>
 			<span id="changelog-img">
 				<svg viewBox="0 0 100 100"><path fill="none" stroke="#000" stroke-linejoin="round" stroke-width="4" d="M70 19.6v13.3h13.6z"/><path fill="none" stroke="#000" stroke-linejoin="round" stroke-width="4" d="M41.1 19.6v27.7h20.2c3.7 0 6.6 2.9 6.6 6.5v20.3h15.7V33L69.9 19.6l13.7 13.3H69.9V19.6z"/><rect width="51.5" height="32.3" x="16.4" y="47.3" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" ry="6.6"/><path d="M16.4 58v3.5h8.7v3h-8.7V68h8.7v3h-8.7v3.6h8.7v4.9h3.6v-5h6.8v5H39v-5h6.8v5h3.6v-5h6.8v5h3.5v-5H68v-3.4h-8.2v-3H68v-3.6h-8.2v-3H68V58zm12.3 3.5h6.8v3h-6.8zm10.3 0h6.8v3H39zm10.4 0h6.8v3h-6.8zM28.7 68h6.8v3h-6.8zM39 68h6.8v3H39zm10.4 0h6.8v3h-6.8z" overflow="visible"/><path stroke="#000" stroke-width="6.9" d="M25.5 15.8v17h10v-17z" transform="matrix(.51808 0 0 .65539 16.3 31.3)"/><path stroke="#000" stroke-width="6.9" d="M25.5 15.8v17h10v-17z" transform="matrix(.51808 0 0 .65539 37 31.3)"/><path fill="none" stroke="#000" stroke-linecap="round" stroke-width="4" d="M60 41.7h14.5v0"/><path d="M67.3 50.3v3.5h7.2a1.8 1.8 0 001.7-1.8 1.8 1.8 0 00-1.7-1.7H72zM67.3 59v3.6h7.2a1.8 1.8 0 001.7-1.7 1.8 1.8 0 00-1.7-1.8H72z" overflow="visible"/><circle cx="50" cy="50" r="47.5" fill="rgba(0, 0, 0, 0)" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/><path hover-action="show" stroke="rgba(255, 255, 255, 0)" fill="none" d="M20 40l30 20 30-20" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/></svg>
 			</span>
@@ -87,6 +93,12 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 				<iframe src="changelog.html"></iframe>
 			</span>
 			<span id="toolbar">
+				<span class="file-img gear" tooltip="Config" onclick="openConfig()">
+					<svg viewBox="0 0 20 20"><path d="M10 2.5a7.5 7.5 0 107.5 7.5A7.5 7.5 0 0010 2.5zm0 11a3.5 3.5 0 113.5-3.5 3.5 3.5 0 01-3.5 3.5z"/><path d="M12 3.29L11.5 0h-3L8 3.29a7 7 0 014 0zM8 16.71L8.5 20h3l.5-3.29a7 7 0 01-4 0zm8.16-10.04l2-2.68L16 1.87l-2.68 2a7 7 0 012.83 2.83zM3.84 13.33L1.87 16 4 18.13l2.68-2a7 7 0 01-2.83-2.83zM16.71 12l3.29-.5v-3L16.71 8a7 7 0 010 4zM3.29 8L0 8.5v3l3.29.5a7 7 0 010-4zm10.04 8.16l2.68 2L18.13 16l-2-2.68a7 7 0 01-2.83 2.83zM6.67 3.84L4 1.87 1.87 4l2 2.68a7 7 0 012.8-2.84z"/></svg>
+					<!-- This graphic is a slightly compressed copy of [[File:OOjs_UI_icon_advanced.svg]] by Mun May Tee-Galloway -->
+					<!-- This graphic was made available using the CC-BY-SA-3.0 licence -->
+					<!-- Original file and full licence located at https://commons.wikimedia.org/wiki/File:OOjs_UI_icon_advanced.svg -->
+				</span>
 				<span class="file-img" tooltip="Add a new list" onclick="addList()">
 					<svg viewBox="0 0 47.8 56.9"><path d="M37 2v9h9z" stroke-width="4" stroke-linejoin="round"/><path d="M18 2v37h28V11l-9-9z" stroke-width="4" stroke-linejoin="round"/><path d="M31 33l-6-7M41 16L31 33" stroke-width="4" stroke-linecap="round"/><path d="M10 37v20M0 47h20" stroke-width="5"/></svg>
 				</span>
@@ -99,7 +111,7 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 				<span class="file-img" tooltip="Export board" onclick="exportBoard()">
 					<svg viewBox="0 0 97 90"><path d="M48 4v19h19z" stroke-width="8" stroke-linejoin="round"/><path d="M4 4v82h63V23L48 4z" stroke-width="8" stroke-linejoin="round"/><path d="M80 39l13 13-13 12" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M92 52H54" stroke-width="8" stroke-linecap="round"/></svg>
 				</span>
-				<span class="file-img red" tooltip="Delete all" onclick="if(confirm('Are you sure you want do delete everything?\nYour current board will not be saved.'))$('.list,.note').remove()">
+				<span class="file-img red" tooltip="Delete all" onclick="if(confirm('Are you sure you want to delete everything?\nYour current board will not be saved.'))$('.list,.note').remove()">
 					<svg viewBox="12 8 26 32"><path fill="none" stroke-linecap="square" stroke-linejoin="round" stroke-width="2" d="M15 14l2 25h16l2-25"/><path fill="none" stroke-width="2" d="M21 18v16M25 18l.0139 16M29 18v16M12 13h26"/><path fill="none" stroke-linejoin="round" stroke-width="2" d="M21 12V9h8v3"/><path d="M21 8a1.0001 1.0001 0 00-1 1v3h2v-2h6v2h2V9a1.0001 1.0001 0 00-1-1h-8z" color="#000" overflow="visible"/><path d="M22 10v1c0-.558324.441676-1 1-1h4c.558324 0 1 .441676 1 1v-1" color="#000" overflow="visible"/></svg>
 				</span>
 			</span>
@@ -113,6 +125,18 @@ Inspired by Tasker and Tasker2, both by Zevan Rosser (https://github.com/ZevanRo
 				<input type="text" id="title-text" class="hidden" placeholder="Checklist" />
 			</div>
 			<div id="board" list-counter="0">
+			</div>
+			<div id="config-menu" style="display:none">
+				<div id="form">
+					<h1>Config</h1>
+					<input type="checkbox" config-setting="encrypt" />
+					<label> Encrypt save</label>
+					<br />
+					<input type="checkbox" config-setting="unloadWarning" />
+					<label> Unload warning</label>
+					<br />
+					<input type="button" value="Done" onclick="closeConfig()" />
+				</div>
 			</div>
 		</div>
 	</body>

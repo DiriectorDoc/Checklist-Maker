@@ -9,28 +9,12 @@ code {
 	font-family: "Lucida Console", Monaco, monospace;
 	background: #888;
 }
-hr.dashed {
-  border: 1px dashed rgba(0, 0, 0, .5)
-}
 iframe {
 	border: 2px solid #444;
 	box-shadow: -3px 15vh #333;
 }
 image-src {
 	display: none;
-}
-kbd {
-	background-color: #eee;
-	border-radius: 3px;
-	border: 1px solid #b4b4b4;
-	box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
-	color: #333;
-	display: inline-block;
-	font-size: .85em;
-	font-weight: 700;
-	line-height: 1;
-	padding: 2px 4px;
-	white-space: nowrap;
 }
 svg {
 	-webkit-touch-callout: none;
@@ -152,9 +136,6 @@ tr {
 .note-content {
 	height: calc(100% - 1.8em);
 }
-.nowrap {
-	white-space: nowrap;
-}
 .picked-up {
 	background: #bbb;
 }
@@ -275,6 +256,23 @@ tr {
 	-o-transition: all 250ms ease-out;
 	transition: all 250ms ease-out;
 }
+#config-menu{
+	position: absolute;
+	top: 0;
+	height: 100%;
+	width: 100%;
+	background: rgba(40, 40, 40, .5)
+}
+#form {
+	background: #eee;
+	border: 2px #000 solid;
+	width: 50%;
+	height: 50%;
+	margin: auto;
+	position: relative;
+	top: 25%;
+	padding: 0 1em;
+}
 #header {
 	background: #55a;
 	margin: 0;
@@ -291,24 +289,38 @@ tr {
 #toolbar .file-img {
 	cursor: pointer;
 }
-#toolbar .file-img:hover svg {
-	stroke: #000;
+#toolbar .file-img.red svg {
+	stroke: #c33;
+	fill: #c33;
+}
+#toolbar .file-img.red:hover svg path[color="#000"] {
+	fill: #f00;
 }
 #toolbar .file-img.red:hover svg path[fill="none"] {
 	stroke: #f00;
 }
-#toolbar .file-img.red:hover svg path[color="#000"] {
-	fill: #f00;
+#toolbar .file-img:hover svg {
+	stroke: #000;
+}
+#toolbar .file-img.gear svg {
+	fill: #333;
+	-webkit-transition: all 250ms ease-out;
+	-moz-transition: all 250ms ease-out;
+	-ms-transition: all 250ms ease-out;
+	-o-transition: all 250ms ease-out;
+	transition: all 250ms ease-out;
+}
+#toolbar .file-img.gear:hover svg {
+	fill: #000;
+	-webkit-transform: rotate(90deg);
+	-moz-transform: rotate(90deg);
+	transform: rotate(90deg);
 }
 #toolbar svg {
 	fill: none;
 	height: 2em;
 	padding: 0 0.33em;
 	stroke: #333;
-}
-#toolbar .file-img.red svg {
-	stroke: #c33;
-	fill: #c33;
 }
 #toolbar {
 	display: block;
