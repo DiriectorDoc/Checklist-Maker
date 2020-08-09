@@ -5,13 +5,41 @@
         <title>Chanhelog</title>
         <link href="main.css" rel="stylesheet" type="text/css">
 		<style>
-		::-webkit-scrollbar{width:initial}::-webkit-scrollbar-thumb{border-radius:10px;background:#000}::-webkit-scrollbar-track{display:none}
+		::-webkit-scrollbar-thumb{border-radius:10px;background:#000}::-webkit-scrollbar-track{display:none}::-webkit-scrollbar{width:initial}[indent="1"]{--indent:1}/*[indent="2"]{--indent:2}*/hr{border:1px dashed rgba(0,0,0,.5)}kbd{border:1px solid #b4b4b4;border-radius:3px;box-shadow:0 1px 1px rgba(0,0,0,.2), 0 2px 0 0 rgba(255,255,255,.7) inset;color:#333;display:inline-block;font-size:.85em;font-weight:700;line-height:1;white-space:nowrap;padding:2px 4px;background:#eee}li[indent]{margin-left:calc(1.15em*var(--indent));list-style-type:circle}log{border-bottom:1px solid #000;display:block}.nowrap{white-space:nowrap}
 		</style>
     </head>
 	<body>
+		<log log-number="2">
+			<h1>v0.3_Beta</h1>
+			<hr />
+			<p>
+				This update mainly implements the encryption system but also fixes one or two things.
+			</p>
+			<h2>Changes</h2>
+			<h3>Major</h3>
+			<ul>
+				<li>Implemented encryption system</li>
+				<li indent="1">By default, exporting a board will be the same as it was before the patch. To export an encrypted file, you first need to modify the Config. Speaking of which...</li>
+				<li>Added Config menu to the toolbar</li>
+				<li>Fixed a minor spelling error in the "Delete board" warning alert: <span class="nobreak">"do" &rarr; "to"</span></li>
+				<li>You can now disable the unload warning</li>
+				<li indent="1">Option in the Config menu</li>
+				<li>Fixed a line that causes the changelog iframe to have an unintentional x-scrollbar</li>
+				<li indent="1">Made a change in the changelog? So meta.</li>
+				<li>Adding a new list/note will now place it in a new location every time</li>
+			</ul>
+			<h3>Technical</h3>
+			<ul>
+				<li>Cracked down on single-quote strings where double-quote strings work perfectly fine &ndash; made consistent</li>
+				<li>Organized functions in <code>main.js</code></li>
+				<li>Moved a bunch of changelog-exclusive CSS code to <code>changelog.html</code> instead of keeping it in <code>main.css</code></li>
+				<li>Replaced some styling-via-JS with standard CSS in <code>changelog.html</code></li>
+				<li>Replaced even more inefficient JQuery with its proper usage</li>
+			</ul>
+		</log>
 		<log log-number="1">
 			<h1>v0.2_Beta</h1>
-			<hr class="dashed" />
+			<hr />
 			<p>
 				This is the first Beta update. It's been more than a week since the last alpha update, but now, we're flipping the switch; this project is now in Beta, not that anything has changed.
 			</p>
@@ -41,7 +69,7 @@
 				<li>Actually started using JQ properly. Managed to save probably hundreds of bytes of duplicate <code>$()</code> functions.</li>
 				<li>Made function <code>getID()</code> which returns the string ID of a list or list row &ndash; saves space</li>
 				<li>Moved variable <code>defaultBoard</code> to <code>main.js</code> and also turned it into a constant</li>
-				<li>Replaced: <span class="nowrap"><code>.on("keypress", call)</code> &rarr; <code>.on("keydown", call)</code></span></li>
+				<li>Replaced: <code>.on("keypress"...</code><br />&rarr; <code>.on("keydown"...</span></li>
 				<li indent="1">Deprecated</li>
 			</ul>
 		</log>
@@ -55,13 +83,6 @@
 			appendices.forEach(function(e, i){
 				if(e.condition){
 					document.getElementById("appx " + i).innerHTML = e.text;
-				}
-			});
-			let elems = [];
-			Array.prototype.slice.call(document.getElementsByTagName("LI")).forEach(function(e){
-				if(e.attributes.indent){
-					e.style.marginLeft = e.attributes.indent.value * 1.15 + "em";
-					e.style.listStyleType = "circle";
 				}
 			});
 		</script>

@@ -1,38 +1,40 @@
 (function(root, factory){
-	if (typeof define === 'function' && define.amd) {
+	if (typeof define === "function" && define.amd) {
 		// AMD. Register as an anonymous module.
-		define(['exportBoard'], function (a) {
+		define(["exportBoard"], function (a) {
 			return (root.amdWebGlobal = factory(a));
 		});
 	} else {
 		// Browser globals
 		root.exportBoard = factory(root.exportBoard);
 	}
-}(typeof window !== 'undefined' ? window : this, function(exportBoard){
+}(typeof window !== "undefined" ? window : this, function(exportBoard){
 
 	exportBoard = function(board){
 		if(board){
-			let name;
+			let config = window.config || {encrypt:0,unloadWarning:1},
+				name;
 			if(typeof board === "object"){
 				name = board.title;
-				board = JSON.stringify(board, null, 4)
+				board = Encryptor.encrypt(JSON.stringify(board, null, 4))
 			} else if(typeof board === "string"){
 				name = (/"title":\s*"(.*)",?/g).exec(board)[1];
 			}
 			$("<a>").attr({
-				download: name,
-				href: URL.createObjectURL(new Blob([board], {type : 'application/json'}))
+				download: name + (config.encrypt ? ".cmbenc" : ""),
+				href: URL.createObjectURL(new Blob([board], {type : config.encrypt ? "text/plain" : "application/json"}))
 			})[0].click();
 			return;
 		} else {
 			board = {
-				version: 0.02,
+				version: 0.03,
 				title: $.trim($("#title").html()),
 				lists: [],
-				notes: []
+				notes: [],
+				config: config
 			};
 
-			$(".list").toArray().forEach(function(e){
+			$(".list").each(function(i, e){
 				e = $(e)[0];
 				let n = (/list-(\d+)/g).exec(e.id)[1] * 1;
 
@@ -43,9 +45,8 @@
 					left: e.style.left,
 					width: e.style.width,
 					height: e.style.height
-				}
-
-				let trs = $(e).find(".list-content tr");
+				},
+					trs = $(e).find(".list-content tr");
 				for(var i = 0; i < trs.length; i++){
 					let tr = $(trs[i])
 					newList.items.push({
@@ -57,7 +58,7 @@
 				board.lists.push(newList);
 			})
 
-			$(".note").toArray().forEach(function(e){
+			$(".note").each(function(i, e){
 				e = $(e)[0];
 				let n = (/note-(\d+)/g).exec(e.id)[1] * 1;
 
@@ -70,7 +71,6 @@
 					height: e.style.height
 				});
 			})
-
 			exportBoard(board);
 		}
 	}
