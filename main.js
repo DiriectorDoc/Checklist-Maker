@@ -252,15 +252,13 @@ function createRow(list, row){
 		.append('<input class="text" type="text" placeholder="Task ' + (row + 1) + '" />')
 		.append('<span class="hidden" onclick="hideSpan(' + list + ', ' + row + ')">');
 	$(rowID + "-task input").blur(function(){
-		let span = $(rowID + "-task span"),
-			input = $(rowID + "-task input"),
-			field = $.trim(input.val()) ? $.trim(input.val()):input.attr("placeholder");
+		let input = $(rowID + "-task input");
 		
-		span
-			.html(field ? field:input.attr("placeholder"))
+		$(rowID + "-task span")
+			.html($.trim(input.val()) || input.attr("placeholder"))
 			.removeClass("hidden")
 			.addClass("task")
-		$(rowID + "-task input").addClass("hidden");
+		input.addClass("hidden");
 	})
 
 	$(rowID + " td.check").append('<input type="checkbox" onclick="updateProgressBar(' + list + ')" />');
@@ -318,10 +316,7 @@ function setTextareaHeight(note){
 }
 
 function dragElement(elmnt) {
-	let pos1 = 0,
-		pos2 = 0,
-		pos3 = 0,
-		pos4 = 0;
+	let [pos1, pos2, pos3, pos4] = [0, 0, 0, 0];
 
 	$("#" + elmnt.id + "-header-drag-handler-img")[0].onmousedown = dragMouseDown;
 
