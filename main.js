@@ -79,7 +79,7 @@ function createBoard(save){
 }
 
 function addList(list){
-	let i = $("#board").attr("list-counter") * 1,
+	let i = +$("#board").attr("list-counter"),
 		useDefaultSave = !list;
 	if(useDefaultSave){
 		list = defaultBoard.lists[0];
@@ -181,7 +181,7 @@ function addList(list){
 }
 
 function addNote(note){
-	let i = $("#board").attr("list-counter") * 1,
+	let i = +$("#board").attr("list-counter"),
 		useDefaultSave = !note;
 	if(useDefaultSave){
 		note = defaultBoard.notes[0];
@@ -273,13 +273,13 @@ function createRow(list, row){
 function addRow(list){
 	let listID = getID(list),
 		oldHeight = $(listID).height(),
-		newRow = $(listID).attr("counter") * 1; // $.attr("...") returns a string. Multiplying by one converts string into an arithmetic-ready number.
+		newRow = +$(listID).attr("counter");
 
 	createRow(list, newRow);
 	addKeyListener(list, newRow, true);
 
 	$(listID).attr({
-		"total-rows": $(listID).attr("total-rows") * 1 + 1,
+		"total-rows": +$(listID).attr("total-rows") + 1,
 		"counter": newRow + 1
 	});
 
@@ -307,7 +307,7 @@ function deleteRow(list, row){
 	setListHeight(list, oldHeight);
 
 	// element.html() returns a string. Multiplying by one to convert string to an arithmetic-ready number.
-	$(listID).attr("total-rows", $(listID).attr("total-rows") * 1 + 1);
+	$(listID).attr("total-rows", +$(listID).attr("total-rows") + 1);
 }
 
 function setTextareaHeight(note){
@@ -420,7 +420,7 @@ function setListHeight(list, oldHeight){
 	let listE = $(getID(list)),
 		
 		newHeight = $(getID(list) + "-header").height() + $(getID(list) + "-table").height() + $(getID(list) + "-footer").height(),
-		contentHeight = listE.attr("content-height") * 1;
+		contentHeight = +listE.attr("content-height");
 
 	listE.attr("content-height", newHeight);
 
