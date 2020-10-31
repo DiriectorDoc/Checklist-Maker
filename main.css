@@ -165,17 +165,6 @@ tr {
 	height: 1.4em;
 	pointer-events: none;
 }
-.social a {
-	margin: 5px;
-}
-.social svg {
-	height: 20px;
-	max-width: 25px;
-	transition: all 250ms ease-out;
-}
-.social svg:hover {
-	transform: scale(1.5);
-}
 .social {
 	float: right;
 }
