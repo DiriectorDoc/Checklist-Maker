@@ -14,15 +14,16 @@
 		if(board){
 			let config = window.config || {encrypt:0,unloadWarning:1},
 				name;
-			if(typeof board === "object"){
+			if(typeof board == "object"){
 				name = board.title;
-				board = Encryptor.encrypt(JSON.stringify(board, null, 4))
-			} else if(typeof board === "string"){
+				let jsonString = JSON.stringify(board, null, 4);
+				board = config.encrypt ? Encryptor.encrypt(jsonString) : jsonString
+			} else if(typeof board == "string"){
 				name = (/"title":\s*"(.*)",?/g).exec(board)[1];
 			}
 			$("<a>").attr({
 				download: name + (config.encrypt ? ".cmbenc" : ""),
-				href: URL.createObjectURL(new Blob([board], {type : config.encrypt ? "text/plain" : "application/json"}))
+				href: URL.createObjectURL(new Blob([board], {type: config.encrypt ? "text/plain" : "application/json"}))
 			})[0].click();
 			return;
 		} else {
